@@ -4,12 +4,10 @@
     abstract class Controller
     {
         protected $request_;
-        protected $information_;
         
-        public function __construct(Request $request, ControllerInformation $information)
+        public function __construct(Request $request)
         {
             $this->request_ = $request;
-            $this->information_ = $information;
         }
 
         /**
@@ -19,10 +17,6 @@
          */
         public function execute_action(string $action)
         {
-            if ($action == '')
-            {
-                $action = $this->information_->get_action();
-            }
             if (method_exists($this, $action))
             {
                 $this->{$action}();

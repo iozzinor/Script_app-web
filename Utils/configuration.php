@@ -50,14 +50,5 @@
 			}
 			return $value;
 		}
-
-		/**
-		 * @return string The server base url.
-		 */
-		public static function get_base_url()
-		{
-			return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . self::get('base_uri');
-		}
 	}
-
 ?>

@@ -1,20 +1,22 @@
 <?php
 	/**
-	 * This is a the request class.
+	 * This is the request class.
 	 *
-	 * It gathers all information about the request: POST and GET.
+	 * It gathers all information about the request: POST, GET, COOKIES.
 	 * It provides an accessor to parameters.
 	 */
 	class Request
 	{
 		/**
-		 * The associative array of parameters.
+		 * The associative array of parameter sources.
 		 */
-		private $parameters_;
+		private $parameter_sources_;
 			
-		public function __construct($parameters)
+		public function __construct()
 		{
-			$this->parameters_ = $parameters;
+			$default_parameters = parse_ini_file(Router::get_base_path() . '/Configuration/default.ini');
+
+			$this->parameter_sources_ = [$_COOKIE, $_GET, $_POST, $default_parameters];
 		}
 
 		/**
@@ -26,7 +28,31 @@
 			{
 				return false;
 			}
-			return isset($this->parameters_[$name]) && $this->parameters_[$name] != null;
+			for ($i = 0; $i < count($this->parameter_sources_); $i++)
+			{
+				if (isset($this->parameter_sources_[$i][$name]) && $this->parameter_sources_[$i][$name] != null)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private function get_parameter_($name)
+		{
+			if ($name == null)
+			{
+				return false;
+			}
+			for ($i = 0; $i < count($this->parameter_sources_); $i++)
+			{
+				if (isset($this->parameter_sources_[$i][$name])
+					&& $this->parameter_sources_[$i][$name] != null)
+				{
+					return $this->parameter_sources_[$i][$name];
+				}
+			}
+			return null;
 		}
 
 		/**
@@ -36,9 +62,10 @@
 		 */
 		public function get_parameter($name)
 		{
-			if ($this->parameter_exists($name))
+			$result = $this->get_parameter_($name);
+			if ($result != null)
 			{
-				return $this->parameters_[$name];
+				return $result;
 			}
 			throw new Exception("Parameter with name " . $name . " does not exist.");
 		}

@@ -1,7 +1,9 @@
 RewriteEngine on
 
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule (.*) - [S=1]
+RewriteCond %{REQUEST_URI} ^/Script_odont/Admin.* [OR]
+RewriteCond %{REQUEST_URI} ^/Script_odont/Content.*
+RewriteRule (.*) - [S=2]
 
+RewriteCond %{REQUEST_URI} ^/Script_odont/.*
+RewriteCond %{REQUEST_URI} !^.*/index\.php
 RewriteRule (.*) /Script_odont/index.php?q=$1 [QSA]

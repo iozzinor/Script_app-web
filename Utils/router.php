@@ -1,17 +1,34 @@
 <?php
-	// Model
-	require_once 'request.php';
-	require_once 'configuration.php';
-	require_once 'model.php';
+	// Utils
 	require_once 'generation_time.php';
-
-	// Controller
-	require_once 'controller_information.php';
-	require_once 'controller_api.php';
-	require_once 'controller_secure.php';
+	require_once 'request.php';
 
 	class Router
 	{
+		// ---------------------------------------------------------------------
+		// STATIC
+		// ---------------------------------------------------------------------
+		/**
+		 * The base URI.
+		 */
+		private static $base_uri_ = '/Script_odont';
+
+		/**
+		 * @return string The server base url.
+		 */
+		public static function get_base_url()
+		{
+			return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . self::$base_uri_;
+		}
+
+		public static function get_base_path()
+		{
+			return $_SERVER['DOCUMENT_ROOT'] . '/Script_odont';
+		}
+
+		// ---------------------------------------------------------------------
+		// INSTANCE
+		// ---------------------------------------------------------------------
 		private $controller_information_;
 
 		public function __construct()
@@ -29,23 +46,11 @@
 			try 
 			{
 				// create the request
-				$parameters = array_merge($_GET, $_POST);
-				$request = new Request($parameters);
+				$request = new Request();
+				
+				$query = $request->get_parameter('q');
 
-				// check whether the query is invalid
-				if ($request->parameter_exists('invalid_query'))
-				{
-					throw new Exception('Invalid query: ' . $request->get_parameter('invalid_query'));
-				}
-				else
-				{
-					$controller_information = $this->find_controller();
-					$this->controller_information_ = $controller_information;
-
-					$controller = $this->create_controller($controller_information, $request);
-
-					$controller->execute_action($controller_information->get_action());
-				}
+				$controller_parent_path = $this->find_controller_information_($query);
 			}
 			catch (Exception $exception)
 			{
@@ -53,87 +58,83 @@
 				$this->manage_exception($exception);
 			}
 		}
-
+	
 		/**
-		 * Find the controller to call.
+		 * @param query The query.
 		 * 
 		 * @return ControllerInformation The controller information.
 		 */
-		protected function find_controller()
+		protected function find_controller_information_(string $query)
 		{
-			// parent path
-			$parent_directory_path = dirname($_SERVER['SCRIPT_NAME']);
-			$parent_directory_path = str_replace('/', '\\/', $parent_directory_path);
+			// break down the query into components
+			print('<p>The query: ' . $query . '</p>');
+			$query_components = explode('/', $query);
 
-			$full_request = $_SERVER['REQUEST_URI'];
-			$full_request = preg_replace('/' . $parent_directory_path . '/', '', $full_request);
-
-			preg_match('/(.*)\\/([^\\/]+)\\/([^\\/?]+)\\/?/', $full_request, $matches);
-			$matches_string = print_r($matches, true);
-
-			// path components
-			$components_count = count($matches);
-			if ($components_count > 0)
-				$requested_path = $matches[1];
-			if ($components_count > 1)
-				$requested_controller_name =  $matches[2];
-			if ($components_count > 2)
-				$requested_controller_action =  $matches[3];
-
-			// no path
-			if (!isset($requested_path))
+			$parent_directory_path = Router::get_base_path() . '/Controller';
+			$controller_name = 'home';
+			$action = '';
+			
+			$i = -1;
+			$current_path 	= $parent_directory_path;
+			$current_name 	= '';
+			while ($i < count($query_components))
 			{
-				$requested_path = preg_replace('/^\\/?/', '', $full_request);
-			}
-			if (!isset($requested_controller_name))
-			{
-				$requested_controller_name = $requested_path;
-				$requested_path = '';
-			}
-			if (!isset($requested_controller_action))
-			{
-				$requested_controller_action = 'default_action';
-			}
+				$i++;
 
-			// controller name is directory
-			$test_directory_path = 'Controller/' . $requested_path . '/' . $requested_controller_name;
-			if (file_exists($test_directory_path) && filetype($test_directory_path))
-			{
-				$requested_path .= '/' . $requested_controller_name;
-				if ($requested_controller_action != 'default_action')
+				print(' ---> ' . $i . ' ' . $current_path . '<br />');
+				print('      ' . $current_name . '<br />');
+
+				if ($this->is_valid($current_path, $current_name))
 				{
-					$requested_controller_name = $requested_controller_action;
+					$parent_directory_path	= $current_path;
+					$controller_name 		= $current_name;
+				}
+
+				if ($current_name != '')
+				{
+					$current_path = $current_path . '/' . $current_name;
+				}
+				$current_name = strtolower($query_components[$i]);
+
+				if ($i < count($components))
+				{
+					$action = strtolower($components[$i]);
+					print('ACTION: ' . $action . '<br />');
 				}
 				else
 				{
-					$requested_controller_name = 'home';
+					$action = 'default_action';
 				}
-
-				$requested_controller_action = 'default_action';
 			}
 
-			return new ControllerInformation($requested_path, $requested_controller_name, $requested_controller_action);
+			print('parent: ' . $parent_directory_path . '<br />');
+			print('controller: ' . $controller_name . '<br />');
+			print('action: ' . $action . '<br />');
+			print('---<br />');
 		}
-		
+
+		protected function is_valid($controller_parent_path, $controller_name)
+		{
+			if (!is_dir($controller_parent_path))
+			{
+				return false;
+			}
+
+			print($controller_parent_path . '/controller_' . $controller_name . '.php<br />');
+			if (is_file($controller_parent_path . '/controller_' . $controller_name . '.php'))
+			{
+				print('valid!<br />');
+				return true;
+			}
+		}
+
 		/**
 		 * Initialize a new controller.
 		 * 
 		 * @return Controller The new controller.
 		 */
-		protected function create_controller(ControllerInformation $controller_information, Request $request)
+		protected function create_controller($query)
 		{
-			// display the not found page
-			if (!file_exists($controller_information->get_file_path()))
-			{
-				$controller_information = new ControllerInformation('', 'not_found', 'default_action');
-			}
-
-			require($controller_information->get_file_path());
-			$controller_class = $controller_information->get_class_name();
-
-			$controller = new $controller_class($request, $controller_information);
-
-			return $controller;
 		}
 
 		/**
@@ -143,16 +144,7 @@
 		 */
 		protected function manage_exception(Exception $exception)
 		{
-			$error_view_file_path = dirname(__DIR__) . '/View/exception.php';
-			$template = dirname(__DIR__) . '/View/template.php';
-			if (isset($this->controller_information_) && $this->controller_information_->belongs_to_api())
-			{
-				$error_view_file_path = $this->controller_information_->get_current_api_exception_view_file_path();
-				$template = null;
-			}
-
-			$error_view = new View($error_view_file_path);
-			$error_view->generate(array('title' => 'An error occured', 'exception' => $exception), $template);
+			print('exception: ' . $exception);
 		}
 	}
 
