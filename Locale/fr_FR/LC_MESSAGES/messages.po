@@ -1,0 +1,10 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Last-Translator: \n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: fr\n"
+"MIME-version: 1.0\n"
+
+msgid "first_test"
+msgstr "Ceci est un premier test"

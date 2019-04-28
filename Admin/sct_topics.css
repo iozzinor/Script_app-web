@@ -1,0 +1,16 @@
+.topic_name, .added_topic_name
+{
+    border-right: none;
+}
+
+.added_topic_name
+{
+    color: red;
+}
+
+.delete_topic
+{
+    border-left: none;
+    text-align: right;
+    
+}

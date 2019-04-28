@@ -1,0 +1,28 @@
+.hoverable_button
+{
+    color: black;
+
+    border-radius: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border: 2px solid;
+
+    transition-duration: 0.2s;
+}
+
+.hoverable_button:hover
+{
+    color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hoverable_button
+    {
+        color: white;
+    }
+
+    .hoverable_button:hover
+    {
+        color: black;
+    }
+}

@@ -1,0 +1,16 @@
+.type_name, .added_type_name
+{
+    border-right: none;
+}
+
+.added_type_name
+{
+    color: red;
+}
+
+.delete_type
+{
+    border-left: none;
+    text-align: right;
+    
+}

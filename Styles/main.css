@@ -1,0 +1,181 @@
+/*******************************************************************************
+VARIABLES
+*******************************************************************************/
+:root
+{
+    --hover-button-delete-border: red;
+    --hover-button-delete-bg: rgb(237,201,201);
+    --hover-button-default-border: blue;
+    --hover-button-cancel-bg: rgb(137, 137, 137);
+    --hover-button-cancel-border: rgb(11, 11, 11);
+    --hover-button-default-bg: rgb(124,176,245);
+    --hover-button-alternate-border: rgb(220, 111, 15);
+    --hover-button-alternate-bg: rgb(235, 180, 146);
+}
+
+/*******************************************************************************
+MAIN
+*******************************************************************************/
+main
+{
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+}
+
+header, footer
+{
+    width: 90%;
+    margin: auto;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/*******************************************************************************
+HEADER
+*******************************************************************************/
+header
+{
+    background: lightgray;
+}
+
+header ul
+{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+header a
+{
+    color: black;
+    text-decoration: none;
+
+    border-radius: 5px;
+    padding: 5px;
+
+    margin-right: 10px;
+}
+
+header a:hover
+{
+    color: gray;
+    background: black;
+}
+
+/*******************************************************************************
+FOOTER
+*******************************************************************************/
+footer
+{
+    background: gray;
+    color: white;
+    font-size: 0.8em;
+}
+
+/*******************************************************************************
+TABLE
+*******************************************************************************/
+table
+{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th,td
+{
+    border: solid black 1px;
+}
+
+/*******************************************************************************
+TEXTAREA
+*******************************************************************************/
+textarea
+{
+    font-family: inherit;
+}
+
+/*******************************************************************************
+DIALOG
+*******************************************************************************/
+.dialog_background
+{
+    background-color: rgba(200, 200, 200, 0.3);
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.dialog_box
+{
+    padding: 5px;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+
+    border-radius: 5px;
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
+    background-color: white;
+
+    overflow: none;
+}
+
+.dialog_box h1
+{
+    font-size: 1.5em;
+    margin: auto;
+    text-align: center;
+}
+
+.dialog_box .dialog_buttons_container
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root
+    {
+        --hover-button-delete-border: white;
+        --hover-button-delete-bg: rgb(165, 165, 165);
+        --hover-button-default-border: gray;
+        --hover-button-default-bg: rgb(102, 107, 114);
+        --hover-button-alternate-border: rgb(79, 78, 78);
+        --hover-button-alternate-bg: rgb(14, 14, 14);
+    }
+
+    header,footer
+    {
+        background: rgb(40, 40, 40);
+    }
+
+    a
+    {
+        color: darkgray;
+    }
+
+    a:visited
+    {
+        color: darkgray;
+    }
+
+    body  {
+        color: white;
+        background: black;
+    }
+
+    textarea,input {
+        background-color: black;
+        color: white;
+    }
+
+    #dialog_box
+    {
+        box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
+        background-color: gray;
+    }
+}

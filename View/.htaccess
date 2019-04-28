@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule (.*) %{DOCUMENT_ROOT}/Projects/Script_odont/index.php?invalid_query=$1 [L,QSA]
