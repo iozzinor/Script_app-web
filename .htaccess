@@ -2,7 +2,7 @@ RewriteEngine on
 
 RewriteCond %{REQUEST_URI} ^/Script_odont/Admin.* [OR]
 RewriteCond %{REQUEST_URI} ^/Script_odont/Content.*
-RewriteRule (.*) - [S=2]
+RewriteRule .* - [S=2]
 
 RewriteCond %{REQUEST_URI} ^/Script_odont/.*
 RewriteCond %{REQUEST_URI} !^.*/index\.php

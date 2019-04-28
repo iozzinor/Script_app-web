@@ -2,6 +2,7 @@
 	// Utils
 	require_once 'generation_time.php';
 	require_once 'request.php';
+	require_once 'controller_information.php';
 
 	class Router
 	{
@@ -50,7 +51,9 @@
 				
 				$query = $request->get_parameter('q');
 
-				$controller_parent_path = $this->find_controller_information_($query);
+				$controller_information = $this->find_controller_information_($query);
+
+
 			}
 			catch (Exception $exception)
 			{
@@ -72,22 +75,20 @@
 
 			$parent_directory_path = Router::get_base_path() . '/Controller';
 			$controller_name = 'home';
-			$action = '';
+			$action = 'default_action';
 			
 			$i = -1;
 			$current_path 	= $parent_directory_path;
 			$current_name 	= '';
+			$current_action = '';
 			while ($i < count($query_components))
 			{
 				$i++;
-
-				print(' ---> ' . $i . ' ' . $current_path . '<br />');
-				print('      ' . $current_name . '<br />');
-
 				if ($this->is_valid($current_path, $current_name))
 				{
 					$parent_directory_path	= $current_path;
 					$controller_name 		= $current_name;
+					$action 				= strtolower($query_components[$i]);
 				}
 
 				if ($current_name != '')
@@ -95,24 +96,15 @@
 					$current_path = $current_path . '/' . $current_name;
 				}
 				$current_name = strtolower($query_components[$i]);
-
-				if ($i < count($components))
-				{
-					$action = strtolower($components[$i]);
-					print('ACTION: ' . $action . '<br />');
-				}
-				else
-				{
-					$action = 'default_action';
-				}
 			}
+			$action = ($action == '' ? 'default_action' : $action);
 
-			print('parent: ' . $parent_directory_path . '<br />');
-			print('controller: ' . $controller_name . '<br />');
-			print('action: ' . $action . '<br />');
-			print('---<br />');
+			return new ControllerInformation($parent_directory_path, $controller_name, $action);
 		}
 
+		/**
+		 * @return bool Whether the combinaison of path and controller name is valid.
+		 */
 		protected function is_valid($controller_parent_path, $controller_name)
 		{
 			if (!is_dir($controller_parent_path))
@@ -120,12 +112,7 @@
 				return false;
 			}
 
-			print($controller_parent_path . '/controller_' . $controller_name . '.php<br />');
-			if (is_file($controller_parent_path . '/controller_' . $controller_name . '.php'))
-			{
-				print('valid!<br />');
-				return true;
-			}
+			return is_file($controller_parent_path . '/controller_' . $controller_name . '.php');
 		}
 
 		/**
