@@ -15,6 +15,16 @@
 		private static $base_uri_ = '/Script_odont';
 
 		/**
+		 * The default controller information.
+		 */
+		private static $default_controller_information_;
+
+		/**
+		 * The not found controller information.
+		 */
+		private static $not_found_controller_information_;
+
+		/**
 		 * @return string The server base url.
 		 */
 		public static function get_base_url()
@@ -25,6 +35,24 @@
 		public static function get_base_path()
 		{
 			return $_SERVER['DOCUMENT_ROOT'] . '/Script_odont';
+		}
+
+		protected static function get_default_controller_information_()
+		{
+			if (self::$default_controller_information_ == null)
+			{
+				self::$default_controller_information_ = new ControllerInformation(self::get_base_path(), 'home', 'default_action');
+			}
+			return self::$default_controller_information_;
+		}
+
+		protected static function get_not_found_controller_information_()
+		{
+			if (self::$not_found_controller_information_ == null)
+			{
+				self::$not_found_controller_information_ = new ControllerInformation(self::get_base_path(), 'not_found', 'default_action');
+			}
+			return self::$not_found_controller_information_;
 		}
 
 		// ---------------------------------------------------------------------
@@ -53,7 +81,10 @@
 
 				$controller_information = $this->find_controller_information_($query);
 
-
+				print('directory: ' . $controller_information->parent_directory_path_ . '<br />');
+				print('name: ' . $controller_information->controller_name_ . '<br />');
+				print('action: ' . $controller_information->action_ . '<br />');
+				
 			}
 			catch (Exception $exception)
 			{
@@ -71,35 +102,36 @@
 		{
 			// break down the query into components
 			print('<p>The query: ' . $query . '</p>');
-			$query_components = explode('/', $query);
+			$query_components = array_filter(explode('/', $query), function($component) {
+				return strlen($component) > 0;
+			});
 
-			$parent_directory_path = Router::get_base_path() . '/Controller';
-			$controller_name = 'home';
-			$action = 'default_action';
-			
-			$i = -1;
-			$current_path 	= $parent_directory_path;
-			$current_name 	= '';
-			$current_action = '';
-			while ($i < count($query_components))
+			// check components count
+			if (count($query_components) == 0
+				|| (count($query_components) && $query_components[0] == 'home'))
 			{
-				$i++;
-				if ($this->is_valid($current_path, $current_name))
-				{
-					$parent_directory_path	= $current_path;
-					$controller_name 		= $current_name;
-					$action 				= strtolower($query_components[$i]);
-				}
-
-				if ($current_name != '')
-				{
-					$current_path = $current_path . '/' . $current_name;
-				}
-				$current_name = strtolower($query_components[$i]);
+				return Router::get_default_controller_information_();
 			}
-			$action = ($action == '' ? 'default_action' : $action);
 
-			return new ControllerInformation($parent_directory_path, $controller_name, $action);
+			// check last component as controller name
+			$controller_name = array_pop($query_components);
+			$parent_path = Router::get_base_path() . '/Controller/' . join('/', $query_components);
+			if ($this->is_valid($parent_path, $controller_name))
+			{
+				return new ControllerInformation($parent_path, $controller_name, 'default_action');
+			}
+
+			// check last component as action
+			$action = $controller_name;
+			$controller_name = array_pop($query_components);
+			$parent_path = Router::get_base_path() . '/Controller/' . join('/', $query_components);
+			if ($this->is_valid($parent_path, $controller_name))
+			{
+				return new ControllerInformation($parent_path, $controller_name, $action);
+			}
+
+			// return not found information
+			return Router::get_default_controller_information_();
 		}
 
 		/**

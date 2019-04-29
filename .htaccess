@@ -1,9 +1,16 @@
 RewriteEngine on
 
+# hide folders
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+RewriteCond %{REQUEST_URI} !(.*)/$
+RewriteRule ^(.*)$ %{HOST_SCHEME}%{HOST_NAME}/Script_odont/$1/ [R=301,L]
+
+# allow direct access to Admin and Content folders
 RewriteCond %{REQUEST_URI} ^/Script_odont/Admin.* [OR]
 RewriteCond %{REQUEST_URI} ^/Script_odont/Content.*
-RewriteRule .* - [S=2]
+RewriteRule ^(.*)$ $1 [L]
 
+# else, redirect all to the index.php file
 RewriteCond %{REQUEST_URI} ^/Script_odont/.*
-RewriteCond %{REQUEST_URI} !^.*/index\.php
-RewriteRule (.*) /Script_odont/index.php?q=$1 [QSA]
+RewriteCond %{REQUEST_URI} !^/Script_odont/index\.php.*
+RewriteRule (.*) /Script_odont/index.php?q=$1 [PT,QSA]
