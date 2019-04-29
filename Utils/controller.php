@@ -4,10 +4,43 @@
     abstract class Controller
     {
         protected $request_;
+        protected $information_;
         
-        public function __construct(Request $request)
+        public function __construct(Request $request, ControllerInformation $controller_information)
         {
-            $this->request_ = $request;
+            $this->request_     = $request;
+            $this->information_ = $controller_information;
+        }
+
+        /**
+         * @return string The view file path.
+         */
+        protected function get_view_file_path_()
+        {
+            $main_folder_path = $this->information_->get_parent_directory_path();
+            
+            $result = str_replace('Controller', 'View', $main_folder_path);
+
+            $device = strtolower($this->request_->get_parameter('device'));
+            if ($device == 'mobile')
+            {
+                $result .= '/Mobile';
+            }
+            $result .= '/Desktop';
+
+            $result .= '/' . $this->get_view_folder_name_() . '/view_' . $this->information_->get_action() . '.php';
+
+            return $result;
+        }
+
+        protected function get_view_folder_name_()
+        {
+            $result = $this->information_->get_controller_name();
+            if (strlen($result) > 0)
+            {
+                $result[0] = strtoupper($result[0]);
+            }
+            return $result;
         }
 
         /**
@@ -32,7 +65,8 @@
          */
         public function generate_view($view_data = array(), $template = null)
         {
-            $view = new View($this->information_->get_view_file_path());
+            $file_path = $this->get_view_file_path_();
+            $view = new View($file_path);
             $view->generate($view_data, $template);
         }
 

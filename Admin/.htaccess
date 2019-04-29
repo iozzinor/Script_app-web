@@ -1,4 +1,4 @@
 AuthName "Ma page d'administration protégée par un mot de passe"
 AuthType Basic
-AuthUserFile '/var/www/Script_odont/Admin/.htpasswd'
+AuthUserFile '/var/www/Admin/.htpasswd'
 Require valid-user

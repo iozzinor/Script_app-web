@@ -4,6 +4,9 @@
      */
     class View
     {
+        /**
+         * The view file path.
+         */
         private $file_path_;
 
         public function __construct(string $file_path)
