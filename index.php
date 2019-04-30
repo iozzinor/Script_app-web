@@ -6,7 +6,4 @@
 
 	$router = new Router();
 	$router->route_request();
-
-	$get = print_r($_GET, true);
-	print('<pre>' . $get . '</pre>');
 ?>

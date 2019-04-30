@@ -26,20 +26,20 @@
             $navigation_links = array();
 
             // home
-            array_push($navigation_links, array('name' => 'Home', 'href' => 'home'));
+            array_push($navigation_links, array('name' => _('navigation_bar_home'), 'href' => 'home'));
 
             if (Login::is_logged_in())
             {
                 // new SCT subject
-                array_push($navigation_links, array('name' => 'New SCT Subject', 'href' => 'new_sct_subject'));
+                array_push($navigation_links, array('name' => _('navigation_bar_new_sct_subject'), 'href' => 'new_sct_subject'));
 
                 // logout
-                array_push($navigation_links, array('name' => 'Logout', 'href' => 'logout'));
+                array_push($navigation_links, array('name' => _('navigation_bar_logout'), 'href' => 'logout'));
             }
             else
             {
                 // login
-                array_push($navigation_links, array('name' => 'Login', 'href' => 'login'));
+                array_push($navigation_links, array('name' => _('navigation_bar_login'), 'href' => 'login'));
             }
 
 

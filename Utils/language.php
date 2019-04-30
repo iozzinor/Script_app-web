@@ -17,8 +17,9 @@
 		 * List of domains.
 		 */
 		private static $domains_ = array(
-			'messages',
-			'common'
+			'common',
+			'home',
+			'login'
 		);
 
 		/**
@@ -27,7 +28,7 @@
 		private static $initialized_ = false;
 
 		/**
-		 * The current language name.
+		 * The current language name, short.
 		 */
 		private static $language_name_;
 
@@ -85,13 +86,20 @@
 
 			if (array_key_exists($short_name, self::$supported_languages_))
 			{
+				self::$language_name_ = $short_name;
 				$locale_name = self::$supported_languages_[$short_name];
 				self::update_language_($locale_name);
 				return $short_name;
 			}
 
+			self::$language_name_ = self::$default_language_short_name_;
 			self::update_language_(self::$supported_languages_[self::$default_language_short_name_]);
 			return self::$default_language_short_name_;
+		}
+
+		public static function get_lang()
+		{
+			return self::$language_name_;
 		}
 
 		/**
@@ -111,4 +119,21 @@
 		}
 	}
 
+	/**
+	 * Convenience method to replace newlines with <br /> tags.
+	 */
+	function l($message_id)
+	{
+		return nl2br(htmlspecialchars(_($message_id), ENT_COMPAT | EN_HTML_401), false);
+	}
+
+	function _d($domain, $message_id)
+	{
+		return dgettext($domain, $message_id);
+	}
+
+	function _n($message_id_singular, $message_id_plural, $count)
+	{
+		return ngettext($message_id_singular, $message_id_plural, $count);
+	}
 ?>

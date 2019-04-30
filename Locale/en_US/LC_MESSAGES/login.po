@@ -1,0 +1,25 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Last-Translator: \n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+"MIME-version: 1.0\n"
+
+msgid "title"
+msgstr "Login"
+
+msgid "username_label"
+msgstr "Username:"
+
+msgid "username_placeholder"
+msgstr "The username..."
+
+msgid "password_label"
+msgstr "Password:"
+
+msgid "password_placeholder"
+msgstr "The password..."
+
+msgid "login_submit_button"
+msgstr "Login"

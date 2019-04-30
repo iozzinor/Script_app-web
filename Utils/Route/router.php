@@ -5,9 +5,10 @@
 	// Utils
 	require_once(Router::get_base_path() . '/Utils/generation_time.php');
 	require_once(Router::get_base_path() . '/Utils/request.php');
-	require_once(Router::get_base_path() . '/Utils/controller_information.php');
 	require_once(Router::get_base_path() . '/Utils/language.php');
 	require_once(Router::get_base_path() . '/Utils/controller.php');
+	require_once(Router::get_base_path() . '/Utils/controller_information.php');
+	require_once(Router::get_base_path() . '/Utils/controller_secure.php');
 
 	class Router
 	{
@@ -66,23 +67,31 @@
 				$lang 		= $request->get_parameter('lang');
 
 				// update the language
-				$lang = Language::set_language($lang);
+				$actual_lang = Language::set_language($lang);
+				$query_without_lang = array_filter(explode('/', $query), function($component) {
+					return strlen($component) > 0 && $component != $lang;
+				});
+				$query_without_lang = array_map(strtolower, $query_without_lang);
+				$query_without_lang = join('/', $query_without_lang);
+				if ($actual_lang != $lang)
+				{
+					header('Location: ' . Router::get_base_url() . $actual_lang . '/' . $query_without_lang);
+				}
 
 				// get the route domain
 				$this->domain_route_ = $this->find_domain_route_($request, $query);
 
 				// get the controller information
 				$controller_information = $this->find_controller_information_($query);
-
 				// initialize the controller
 				if ($controller_information == null)
 				{
 					$this->domain_route_->resource_not_found($query);
 				}
-
-				$this->execute_controller_action($request, $controller_information);
-				print('Controller file path: ' . $controller_information->get_controller_file_path() . '<br />');
-				print('Controller class name: ' . $controller_information->get_controller_class_name() . '<br />');
+				else
+				{
+					$this->execute_controller_action($request, $controller_information);
+				}
 			}
 			catch (Exception $exception)
 			{
@@ -98,7 +107,8 @@
 		 */
 		protected function find_domain_route_(Request $request, string $query)
 		{
-			if (strpos(strtolower($query), 'api') !== false)
+			$api_position = strpos(strtolower($query), 'api');
+			if ($api_position !== false && $api_position === 0)
 			{
 				return new DomainRouteApi();
 			}
@@ -118,7 +128,6 @@
 		protected function find_controller_information_(string $query)
 		{
 			// break down the query into components
-			print('<p>The query: ' . $query . '</p>');
 			$query_components = array_filter(explode('/', $query), function($component) {
 				return strlen($component) > 0;
 			});
@@ -126,7 +135,7 @@
 
 			// check components count
 			if (count($query_components) == 0
-				|| (count($query_components) && $query_components[0] == 'home'))
+				|| (count($query_components) == 1 && $query_components[0] == 'home'))
 			{
 				return Router::get_default_controller_information_();
 			}

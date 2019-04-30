@@ -1,5 +1,5 @@
 <?php
-    require_once(Configuration::get('root_path') . 'Model/user.php');
+    //require_once(Router::get_base_path() . '/Model/user.php');
 
     class ControllerLogin extends Controller
     {
@@ -12,11 +12,11 @@
 
             // additional resources
             $this->additional_resources_ = array();
-            array_push($this->additional_resources_, array('rel' => 'stylesheet', 'href' => 'Styles/login.css'));
+            array_push($this->additional_resources_, array('rel' => 'stylesheet', 'href' => '/Content/Styles/login.css'));
 
             // additional scripts
             $this->additional_scripts_ = array();
-            array_push($this->additional_scripts_, array('src' => 'Scripts/Dialog/dialog.js'));
+            array_push($this->additional_scripts_, array('src' => '/Content/Scripts/Dialog/dialog.js'));
         }
 
         // ---------------------------------------------------------------------
@@ -27,7 +27,7 @@
             // check that the user is not already logged in
             if (Login::is_logged_in())
             {
-                header('Location: ' . Configuration::get_base_url() . 'home');
+                header('Location: home');
                 exit;
             }
 
@@ -77,7 +77,7 @@
 
             $this->generate_view(
                 $view_information,
-                Configuration::get('root_path') . '/View/template.php'
+                Router::get_base_path() . '/View/template.php'
             );
         }
 
@@ -88,6 +88,9 @@
          */
         private function authentify_user_($username, $password)
         {
+            // TEMP
+            return $username == "jean" && $password = "test";
+            return false;
             $user = new User();
 
             $user_id = $user->authenticate_user($username, $password);

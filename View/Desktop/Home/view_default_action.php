@@ -1,8 +1,12 @@
-<p>Welcome to the Script odont website!</p>
-<p>This is the site to make and take SCTs.<p>
+<p><?=l('welcome_message')?></p>
 <?php
-    if (isset($display_new_sct_subject_link))
+    if ($display_new_sct_subject_link)
     {
-        print('<p>Create an <a href="new_sct_subject">new SCT subject</a>.<p>');
+        $new_sct_string = _d('home', 'new_sct');
+        $create_new_sct_format = _d('home', 'create_new_sct_format');
+
+        print('<p>');
+        printf($create_new_sct_format, '<a href="new_sct_subject">' . $new_sct_string . '</a>');
+        print('</p>');
     }
 ?>

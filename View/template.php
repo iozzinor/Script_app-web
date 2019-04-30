@@ -1,9 +1,12 @@
+<?php
+    $page_title = sprintf(_('site_title_format'), $title);
+?>
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Script odont - <?= $title ?></title>
+        <title><?= $page_title ?></title>
         <meta charset="utf-8" />
-        <link rel=stylesheet href="Styles/main.css" />
+        <link rel=stylesheet href="/Content/Styles/main.css" />
         <?php
             foreach ($additional_resources as $resource)
             {
@@ -14,12 +17,12 @@
     <body>
         <?php require('header.php'); ?>
         <main>
-            <h1>The script odont site - <?= $title ?></h1>
+            <h1><?= $page_title ?></h1>
             <?= $content ?>
         </main>
         <?php require('footer.php'); ?>
 
-        <script src="Scripts/main.js"></script>
+        <script src="/Content/Scripts/main.js"></script>
 
         <?php require('scripts.php') ?>
     </body>
