@@ -12,7 +12,7 @@
             // redirect the user to the login page if he/she is not connected yet
             if (!Login::is_logged_in())
             {
-                header('Location: ' . Configuration::get_base_url() . 'login');
+                header('Location: ' . Router::get_base_url() . 'login');
                 exit;
             }
             parent::execute_action($name);
@@ -26,20 +26,20 @@
             $navigation_links = array();
 
             // home
-            array_push($navigation_links, array('name' => _('navigation_bar_home'), 'href' => 'home'));
+            array_push($navigation_links, array('name' => _('navigation_bar_home'), 'href' => Router::get_base_url() . 'home'));
 
             if (Login::is_logged_in())
             {
                 // new SCT subject
-                array_push($navigation_links, array('name' => _('navigation_bar_new_sct_subject'), 'href' => 'new_sct_subject'));
+                array_push($navigation_links, array('name' => _('navigation_bar_new_sct_subject'), 'href' => Router::get_base_url() . 'new_sct_subject'));
 
                 // logout
-                array_push($navigation_links, array('name' => _('navigation_bar_logout'), 'href' => 'logout'));
+                array_push($navigation_links, array('name' => _('navigation_bar_logout'), 'href' => Router::get_base_url() . 'logout'));
             }
             else
             {
                 // login
-                array_push($navigation_links, array('name' => _('navigation_bar_login'), 'href' => 'login'));
+                array_push($navigation_links, array('name' => _('navigation_bar_login'), 'href' => Router::get_base_url() . 'login'));
             }
 
 

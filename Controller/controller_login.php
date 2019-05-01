@@ -63,7 +63,7 @@
                     if ($this->authentify_user_($username, $password))
                     {
                         $_SESSION['username'] = $username;
-                        header('Location: ' . Configuration::get_base_url() . 'home');
+                        header('Location: ' . Router::get_base_url() . 'home');
                         exit;
                     }
                 }

@@ -21,11 +21,19 @@
 		private static $default_controller_information_;
 
 		/**
-		 * @return string The server base url.
+		 * @return string The server base url, without the current language.
+		 */
+		public static function get_raw_base_url()
+		{
+			return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
+		}
+
+		/**
+		 * @return string The server base url, adding the current language.
 		 */
 		public static function get_base_url()
 		{
-			return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
+			return Router::get_raw_base_url() . Language::get_lang() . '/';
 		}
 
 		public static function get_base_path()
@@ -67,16 +75,7 @@
 				$lang 		= $request->get_parameter('lang');
 
 				// update the language
-				$actual_lang = Language::set_language($lang);
-				$query_without_lang = array_filter(explode('/', $query), function($component) {
-					return strlen($component) > 0 && $component != $lang;
-				});
-				$query_without_lang = array_map(strtolower, $query_without_lang);
-				$query_without_lang = join('/', $query_without_lang);
-				if ($actual_lang != $lang)
-				{
-					header('Location: ' . Router::get_base_url() . $actual_lang . '/' . $query_without_lang);
-				}
+				$this->find_language($query, $lang);
 
 				// get the route domain
 				$this->domain_route_ = $this->find_domain_route_($request, $query);
@@ -90,13 +89,30 @@
 				}
 				else
 				{
-					$this->execute_controller_action($request, $controller_information);
+					$this->execute_controller_action($query, $request, $controller_information);
 				}
 			}
 			catch (Exception $exception)
 			{
 				// display error view
 				$this->manage_exception($exception);
+			}
+		}
+
+		protected function find_language($query, $lang)
+		{
+			Language::load_domains(array(
+				'common',
+				'not_found',
+				'home',
+				'login',
+				'new_sct_subject'
+				)
+			);
+			$actual_lang = Language::set_language($lang);
+			if ($actual_lang != $lang)
+			{
+				header('Location: ' . Router::get_base_url() . $query);
 			}
 		}
 
@@ -114,10 +130,10 @@
 			}
 			else if ($request->get_parameter('device') == 'mobile')
 			{
-				return new DomainRouteWeb(DomainRoute::MOBILE);
+				return new DomainRouteWeb(DomainRoute::MOBILE, $request);
 			}
 
-			return new DomainRouteWeb(DomainRoute::DESKTOP);
+			return new DomainRouteWeb(DomainRoute::DESKTOP, $request);
 		}
 	
 		/**
@@ -188,10 +204,18 @@
 			return new $controller_class_name($request, $controller_information);
 		}
 
-		protected function execute_controller_action(Request $request, ControllerInformation $controller_information)
+		protected function execute_controller_action(string $query, Request $request, ControllerInformation $controller_information)
 		{
 			$controller = $this->create_controller($request, $controller_information);
-			$controller->execute_action($controller_information->get_action());
+
+			if (!$controller->can_execute_action($controller_information->get_action()))
+			{
+				$this->domain_route_->resource_not_found($query);
+			}
+			else
+			{
+				$controller->execute_action($controller_information->get_action());
+			}
 		}
 
 		/**

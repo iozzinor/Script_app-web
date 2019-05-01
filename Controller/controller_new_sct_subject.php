@@ -1,5 +1,5 @@
 <?php
-    require_once(Configuration::get('root_path') . 'Model/sct.php');
+    require_once(Router::get_base_path() . '/Model/sct.php');
 
     class ControllerNewSctSubject extends ControllerSecure
     {
@@ -13,29 +13,29 @@
 
             // additional resources
             $this->additional_resources_ = array();
-            array_push($this->additional_resources_, array('rel' => 'stylesheet', 'href' => 'Styles/new_sct_subject.css'));
-            array_push($this->additional_resources_, array('rel' => 'stylesheet', 'href' => 'Styles/hoverable_button.css'));
+            array_push($this->additional_resources_, array('rel' => 'stylesheet', 'href' => '/Content/Styles/new_sct_subject.css'));
+            array_push($this->additional_resources_, array('rel' => 'stylesheet', 'href' => '/Content/Styles/hoverable_button.css'));
 
             // information script
             $this->sct_information_script_ = $this->make_sct_information_script_();
 
             // additional scripts
             $this->additional_scripts_ = array();
-            array_push($this->additional_scripts_, array('src' => 'Scripts/hoverable_button.js'));
-            array_push($this->additional_scripts_, array('src' => 'Scripts/disable_button.js'));
-            array_push($this->additional_scripts_, array('src' => "Scripts/sct_data_type.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/sct_data.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/sct_item.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/sct_question.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/Dialog/dialog.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/sct_item_element.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/sct_question_element.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/sct_topics_selection.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/add_questions.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/edit_questions.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/settings.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/validation.js"));
-            array_push($this->additional_scripts_, array('src' => "Scripts/New_sct_subject/main.js"));
+            array_push($this->additional_scripts_, array('src' => '/Content/Scripts/hoverable_button.js'));
+            array_push($this->additional_scripts_, array('src' => '/Content/Scripts/disable_button.js'));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/sct_data_type.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/sct_data.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/sct_item.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/sct_question.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/Dialog/dialog.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/sct_item_element.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/sct_question_element.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/sct_topics_selection.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/add_questions.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/edit_questions.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/settings.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/validation.js"));
+            array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/main.js"));
         }
 
         // ---------------------------------------------------------------------
@@ -45,13 +45,13 @@
         {
             $this->generate_view(
                 array(
-                    'title'                     => "New SCT Subject",
+                    'title'                     => _d('new_sct_subject', 'title'),
                     'navigation_links'          => ControllerSecure::get_navigation_links(),
                     'additional_resources'      => $this->additional_resources_,
                     'sct_information_script'    => $this->sct_information_script_,
                     'additional_scripts'        => $this->additional_scripts_
                 ),
-                Configuration::get('root_path') . '/View/template.php'
+                Router::get_base_path() . '/View/template.php'
             );
         }
 

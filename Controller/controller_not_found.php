@@ -1,14 +1,30 @@
 <?php
     class ControllerNotFound extends Controller
     {
+        private $query_;
+
+        public function __construct(Request $request, ControllerInformation $information, string $query)
+        {
+            $this->query_ = $query;
+
+            parent::__construct($request, $information);
+        }
+
         // ---------------------------------------------------------------------
         // DEFAULT ACTION
         // ---------------------------------------------------------------------
         public function default_action()
         {
+            $error_message_format = _d('not_found', 'not_found_message_format');
+            $error_message = sprintf($error_message_format, htmlspecialchars($this->query_));
+
             $this->generate_view(
-                array('title' => "Error 404: Not found"),
-                Configuration::get('root_path') . '/View/template.php'
+                array(
+                    'title'             => _d('not_found', 'title'),
+                    'navigation_links'  => ControllerSecure::get_navigation_links(),
+                    'error_message'     => $error_message
+                ),
+                Router::get_base_path() . '/View/template.php'
             );
         }
     }

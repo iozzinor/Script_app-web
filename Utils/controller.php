@@ -44,6 +44,14 @@
         }
 
         /**
+         * @return bool Whether this controller can execute the action.
+         */
+        public function can_execute_action(string $action)
+        {
+            return method_exists($this, $action);
+        }
+
+        /**
          * Execute an action.
          * 
          * @param action The action to execute.

@@ -1,0 +1,19 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Last-Translator: \n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: fr_FR\n"
+"MIME-version: 1.0\n"
+
+msgid "title"
+msgstr "Erreur 404 : page non trouvée"
+
+msgid "not_found_message_format"
+msgstr "Désolé, il n'est pas possible d'accéder à la resource demandée ('%s') :/"
+
+msgid "not_found_home_format"
+msgstr "Merci de vérifier que vous avez consulté la page %s."
+
+msgid "not_found_home_page"
+msgstr "d'accueil"

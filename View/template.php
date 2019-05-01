@@ -1,7 +1,7 @@
+<!DOCTYPE HTML>
 <?php
     $page_title = sprintf(_('site_title_format'), $title);
 ?>
-<!DOCTYPE HTML>
 <html>
     <head>
         <title><?= $page_title ?></title>
@@ -21,9 +21,6 @@
             <?= $content ?>
         </main>
         <?php require('footer.php'); ?>
-
-        <script src="/Content/Scripts/main.js"></script>
-
         <?php require('scripts.php') ?>
     </body>
 </html>

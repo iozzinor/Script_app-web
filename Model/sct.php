@@ -2,7 +2,7 @@
     require_once 'sct_subject.php';
     require_once 'sfm_subject.php';
 
-    require_once(Configuration::get('root_path') . 'Utils/model.php');
+    require_once(Router::get_base_path() . '/Utils/model.php');
     
     class Sct extends Model
     {
@@ -25,11 +25,12 @@
 
         private function retrieve_published_state_id_()
         {
-            $sql_result = $this->execute_request('SELECT id from sct_state WHERE name=:name', array(':name' => 'PUBLISHED'));
+            /*$sql_result = $this->execute_request('SELECT id from sct_state WHERE name=:name', array(':name' => 'PUBLISHED'));
             if ($result = $sql_result->fetchArray(SQLITE3_ASSOC))
             {
                 $this->published_state_id_ = $result['id'];
-            }
+            }*/
+            $this->published_state_id_ = -1;
         }
 
         /**
@@ -118,14 +119,16 @@
         // ---------------------------------------------------------------------
         public function get_sct_topics()
         {
-            $sql_result = $this->execute_request('SELECT id, name FROM sct_topic;');
+            /*$sql_result = $this->execute_request('SELECT id, name FROM sct_topic;');
 
             $result = array();
             while ($current_topic = $sql_result->fetchArray(SQLITE3_ASSOC))
             {
                 array_push($result, $current_topic);
             }
-            return $result;
+            return $result;*/
+
+            return array('test topic 1', 'test topic 2');
         }
 
         /**
@@ -162,14 +165,15 @@
         // ---------------------------------------------------------------------
         public function get_sct_types()
         {
-            $sql_result = $this->execute_request('SELECT id, name FROM sct_type;');
+            /*$sql_result = $this->execute_request('SELECT id, name FROM sct_type;');
 
             $result = array();
             while ($current_type = $sql_result->fetchArray(SQLITE3_ASSOC))
             {
                 array_push($result, $current_type);
             }
-            return $result;
+            return $result;*/
+            return array('test type 1', 'test type 2');
         }
 
         /**

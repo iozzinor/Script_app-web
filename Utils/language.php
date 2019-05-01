@@ -11,15 +11,16 @@
 
 		private static $default_language_short_name_ = 'en';
 
+		/**
+		 * The locale directory path.
+		 */
 		private static $locale_path_;
 
 		/**
 		 * List of domains.
 		 */
 		private static $domains_ = array(
-			'common',
-			'home',
-			'login'
+			'messages'
 		);
 
 		/**
@@ -31,6 +32,11 @@
 		 * The current language name, short.
 		 */
 		private static $language_name_;
+
+		/**
+		 * The current locale.
+		 */
+		private static $locale_;
 
 		/**
 		 * The current domain.
@@ -54,8 +60,17 @@
 
 		private static function update_language_($locale)
 		{
+			self::$locale_ = $locale;
 			putenv('LANG=' . $locale);
 			setlocale(LC_ALL, $locale);
+		}
+
+		/**
+		 * @return string The current locale.
+		 */
+		public static function locale()
+		{
+			return self::$locale_;
 		}
 
 		/**
@@ -64,6 +79,12 @@
 		public static function get_domains()
 		{
 			return self::$domains_;
+		}
+
+		public static function load_domains($domains)
+		{
+			self::$domains_ = $domains;
+			self::initialize_();
 		}
 
 		/**
