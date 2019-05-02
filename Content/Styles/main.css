@@ -37,9 +37,12 @@ HEADER
 header
 {
     background: lightgray;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
 }
 
-header ul
+header #main_navigation ul
 {
     list-style: none;
     display: flex;
@@ -47,7 +50,7 @@ header ul
     justify-content: center;
 }
 
-header a
+header #main_navigation a
 {
     color: black;
     text-decoration: none;
@@ -58,10 +61,15 @@ header a
     margin-right: 10px;
 }
 
-header a:hover
+header #main_navigation a:hover
 {
     color: gray;
     background: black;
+}
+
+header #site_language ul
+{
+    list-style: none;
 }
 
 /*******************************************************************************

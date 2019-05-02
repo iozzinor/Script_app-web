@@ -21,6 +21,11 @@
 		private static $default_controller_information_;
 
 		/**
+		 * The query.
+		 */
+		private static $query_;
+
+		/**
 		 * @return string The server base url, without the current language.
 		 */
 		public static function get_raw_base_url()
@@ -39,6 +44,11 @@
 		public static function get_base_path()
 		{
 			return $_SERVER['DOCUMENT_ROOT'];
+		}
+
+		public static function get_query()
+		{
+			return self::$query_;
 		}
 
 		protected static function get_default_controller_information_()
@@ -70,26 +80,26 @@
 			try 
 			{
 				// create the request
-				$request	= new Request();
-				$query 		= $request->get_parameter('q');
-				$lang 		= $request->get_parameter('lang');
+				$request		= new Request();
+				self::$query_ 	= $request->get_parameter('q');;
+				$lang 			= $request->get_parameter('lang');
 
 				// update the language
-				$this->find_language($query, $lang);
+				$this->find_language($lang);
 
 				// get the route domain
-				$this->domain_route_ = $this->find_domain_route_($request, $query);
+				$this->domain_route_ = $this->find_domain_route_($request);
 
 				// get the controller information
-				$controller_information = $this->find_controller_information_($query);
+				$controller_information = $this->find_controller_information_(self::$query_);
 				// initialize the controller
 				if ($controller_information == null)
 				{
-					$this->domain_route_->resource_not_found($query);
+					$this->domain_route_->resource_not_found(self::$query_);
 				}
 				else
 				{
-					$this->execute_controller_action($query, $request, $controller_information);
+					$this->execute_controller_action(self::$query_, $request, $controller_information);
 				}
 			}
 			catch (Exception $exception)
@@ -99,7 +109,7 @@
 			}
 		}
 
-		protected function find_language($query, $lang)
+		protected function find_language($lang)
 		{
 			Language::load_domains(array(
 				'common',
@@ -112,18 +122,18 @@
 			$actual_lang = Language::set_language($lang);
 			if ($actual_lang != $lang)
 			{
-				header('Location: ' . Router::get_base_url() . $query);
+				header('Location: ' . Router::get_base_url() . self::$query_);
 			}
 		}
 
 		/**
-		 * @param query The query.
+		 * @param request The request.
 		 * 
 		 * @return RouteDomain The route domain.
 		 */
-		protected function find_domain_route_(Request $request, string $query)
+		protected function find_domain_route_(Request $request)
 		{
-			$api_position = strpos(strtolower($query), 'api');
+			$api_position = strpos(strtolower(self::$query_), 'api');
 			if ($api_position !== false && $api_position === 0)
 			{
 				return new DomainRouteApi();

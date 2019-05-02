@@ -109,8 +109,32 @@
 
         return result;
     };
+
+    // -------------------------------------------------------------------------
+    // SETUP LANGUAGE SELECTION ANIMATION
+    // -------------------------------------------------------------------------
+    function setupLanguageSelectionAnimation()
+    {
+        let languageSelectionNavigation = document.getElementById('site_language');
+        let languagesList = document.querySelector('#site_language ul');
+        console.log(languagesList);
+        languagesList.style.display = 'none';
+
+        languageSelectionNavigation.addEventListener('mouseover', function(event) {
+            languagesList.style.display = 'block';
+        });
+
+        languageSelectionNavigation.addEventListener('mouseout', function(event) {
+            languagesList.style.display = 'none';
+        });
+    }
+
+    setupLanguageSelectionAnimation()
 })(window.Main = window.Main || {});
 
+// -----------------------------------------------------------------------------
+// SETUP TRANSLATION FACILITIES
+// -----------------------------------------------------------------------------
 Gettext.bindFunctions();
 Gettext.tryAutomaticLoading();
 Gettext.textdomain('common');

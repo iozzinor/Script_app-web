@@ -32,6 +32,12 @@
 
 		private static function initialize_()
 		{
+			if (self::$initialized_)
+			{
+				return;
+			}
+			self::$initialized_ = true;
+
 			self::$locale_path_ = Router::get_base_path() . '/Locale';
 			// bind the domains
 			array_push(self::$supported_languages_, new Language('fr', 'fr_FR', 'fr_FR.utf8', 'Français'));
@@ -93,10 +99,7 @@
 		 */
 		public static function set_language($short_name)
 		{
-			if (!self::$initialized_)
-			{
-				self::initialize_();
-			}
+			self::initialize_();
 
 			foreach (self::$supported_languages_ as $supported_language)
 			{
@@ -109,6 +112,11 @@
 
 			self::update_language_(self::$default_language_short_name_);
 			return self::$default_language_short_name_;
+		}
+
+		public static function get_supported_languages()
+		{
+			return self::$supported_languages_;
 		}
 
 		/**

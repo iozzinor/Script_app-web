@@ -20,4 +20,4 @@ RewriteCond %{REQUEST_URI} !^/index\.php.*
 RewriteRule ([^/]+)/(.+) /index.php?lang=$1&q=$2 [L,QSA]
 
 RewriteCond %{REQUEST_URI} !^/index\.php.*
-RewriteRule (.*) /$1/home [R,L,QSA]
+RewriteRule ([^/]*) /$1/home [R,L,QSA]
