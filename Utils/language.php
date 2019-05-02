@@ -4,10 +4,7 @@
 		/**
 		 * The suppported languages.
 		 */
-		private static $supported_languages_ = array(
-			"fr" => array('long' => 'fr_FR.utf8', 'medium' => 'fr_FR'),
-			"en" => array('long' => 'en_US.utf8', 'medium' => 'en_US')
-		);
+		private static $supported_languages_ = array();
 
 		private static $default_language_short_name_ = 'en';
 
@@ -29,24 +26,17 @@
 		private static $initialized_ = false;
 
 		/**
-		 * The current language name, short.
+		 * The current language.
 		 */
-		private static $language_name_;
-
-		/**
-		 * The current locale, long.
-		 */
-		private static $locale_;
-
-		/**
-		 * The current domain.
-		 */
-		private static $domain_;
+		private static $current_language_;
 
 		private static function initialize_()
 		{
 			self::$locale_path_ = Router::get_base_path() . '/Locale';
 			// bind the domains
+			array_push(self::$supported_languages_, new Language('fr', 'fr_FR', 'fr_FR.utf8', 'Français'));
+			array_push(self::$supported_languages_, new Language('en', 'en_US', 'en_US.utf8', 'English'));
+			
 			foreach (self::$domains_ as $domain)
 			{
 				bindtextdomain($domain, self::$locale_path_);
@@ -58,28 +48,17 @@
 			}
 		}
 
-		private static function update_language_($short_name)
+		private static function update_language_(string $short_name)
 		{
-			self::$language_name_ = $short_name;
-			self::$locale_ = self::$supported_languages_[$short_name]['long'];
-			putenv('LANG=' . self::$locale_);
-			setlocale(LC_ALL, self::$locale_);
-		}
-
-		/**
-		 * @return string The current locale, long format.
-		 */
-		public static function locale()
-		{
-			return self::$locale_;
-		}
-
-		/**
-		 * @return string The current locale, medium format.
-		 */
-		public static function locale_medium()
-		{
-			return self::$supported_languages_[self::$language_name_]['medium'];
+			foreach (self::$supported_languages_ as $supported_language)
+			{
+				if ($supported_language->short_name_ == $short_name)
+				{
+					self::$current_language_ = $supported_language;
+					putenv('LANG=' . $supported_language->long_name_);
+					setlocale(LC_ALL, $supported_language->long_name_);
+				}
+			}
 		}
 
 		/**
@@ -94,6 +73,11 @@
 		{
 			self::$domains_ = $domains;
 			self::initialize_();
+		}
+
+		public static function get_current_language()
+		{
+			return self::$current_language_;
 		}
 
 		/**
@@ -114,19 +98,17 @@
 				self::initialize_();
 			}
 
-			if (array_key_exists($short_name, self::$supported_languages_))
+			foreach (self::$supported_languages_ as $supported_language)
 			{
-				self::update_language_($short_name);
-				return $short_name;
+				if ($supported_language->short_name_ == $short_name)
+				{
+					self::update_language_($short_name);
+					return $short_name;	
+				}
 			}
 
 			self::update_language_(self::$default_language_short_name_);
 			return self::$default_language_short_name_;
-		}
-
-		public static function get_lang()
-		{
-			return self::$language_name_;
 		}
 
 		/**
@@ -143,6 +125,44 @@
 				return _($first);
 			}
 			return $first;
+		}
+
+		protected $short_name_;
+		protected $medium_name_;
+		protected $long_name_;
+		protected $full_name_;
+		/**
+		 * @param string $short_name The language short name that should appear in the URL.
+		 * @param string $medium_name The language medium name.
+		 * @param string $long_name The language long name that is used when calling setlocale.
+		 * @param string $full_name The language full name.
+		 */
+		public function __construct($short_name, $medium_name, $long_name, $full_name)
+		{
+			$this->short_name_ 	= $short_name;
+			$this->medium_name_	= $medium_name;
+			$this->long_name_ 	= $long_name;
+			$this->full_name_ 	= $full_name;
+		}
+
+		public function get_short_name()
+		{
+			return $this->short_name_;
+		}
+
+		public function get_medium_name()
+		{
+			return $this->medium_name_;
+		}
+
+		public function get_long_name()
+		{
+			return $this->long_name_;
+		}
+
+		public function get_full_name()
+		{
+			return $this->full_name_;
 		}
 	}
 

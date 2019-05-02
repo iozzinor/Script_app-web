@@ -33,7 +33,7 @@
 		 */
 		public static function get_base_url()
 		{
-			return Router::get_raw_base_url() . Language::get_lang() . '/';
+			return Router::get_raw_base_url() . Language::get_current_language()->get_short_name() . '/';
 		}
 
 		public static function get_base_path()
