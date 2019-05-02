@@ -1,7 +1,7 @@
 <?php
     // attemp to serve the JSON language locale
-    $locale_file = Router::get_base_path() . '/Content/Locale/' . Language::locale() . '.js';
-    $locale_url = Router::get_raw_base_url() . 'Content/Locale/' . Language::locale() . '.js';
+    $locale_file = Router::get_base_path() . '/Content/Locale/' . Language::locale_medium() . '.js';
+    $locale_url = Router::get_raw_base_url() . 'Content/Locale/' . Language::locale_medium() . '.js';
     if (file_exists($locale_file))
     {
         print('<script src="' . $locale_url . '"></script>');

@@ -20,7 +20,7 @@
 
         if (username === "" || password === "")
         {
-            Dialog.appendDialogBox('Login error', 'Please provide a username and a password.');
+            Dialog.appendDialogBox(_d('login', 'Login error'), _d('login', 'Please provide a username and a password.'));
 
             return false;
         }

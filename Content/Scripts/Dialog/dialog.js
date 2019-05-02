@@ -20,26 +20,33 @@
         return buttonsContainer;
     }
 
-    function center(element)
+    function center(element, minimumWidthPercent, minimumHeightPercent)
     {
-        var x = (window.innerWidth - element.clientWidth) / 2.0;
-        var y = (window.innerHeight - element.clientHeight) / 2.0;
-
         element.style.width     = '';
         element.style.height    = '';
+        let minimumWidth    = window.innerWidth * minimumWidthPercent / 100.0;
+        let minimumHeight   = window.innerHeight * minimumHeightPercent / 100.0;
+        let width           = minimumWidthPercent ? Math.max(minimumWidth, element.clientWidth) : element.clientWidth;
+        let height          = minimumHeightPercent ? Math.max(minimumHeight, element.clientHeight) : element.clientHeight;
+
+        var x = (window.innerWidth - width) / 2.0;
+        var y = (window.innerHeight - height) / 2.0;
+
+        element.style.width     = width + "px";
+        element.style.height    = height + "px";
         element.style.overflowX = 'none';
         element.style.overflowY = 'none';
         if (x < 0)
         {
             element.style.overflowX = 'scroll';
             x = 5;
-            element.style.width = (window.innerWidth - 10) + "px";
+            element.style.width = (width - 10) + "px";
         }
         if (y < 0)
         {
             element.style.overflowY = 'scroll';
             y = 5;
-            element.style.height = (window.innerHeight - 10) + "px";
+            element.style.height = (height - 10) + "px";
         }
         element.style.left = x + "px";
         element.style.top = y + "px";
@@ -88,7 +95,7 @@
     // DIALOG BOX
     // -------------------------------------------------------------------------
     DialogBox = class {
-        constructor(title, message, buttonHandlers, content)
+        constructor(title, message, buttonHandlers, content, minimumWidth, minimumHeight)
         {
             if (Dialog.background == undefined)
             {
@@ -98,6 +105,9 @@
 
             this.node = document.createElement('div');
             this.node.className = "dialog_box";
+
+            this.minimumWidth   = minimumWidth
+            this.minimumHeight  = minimumHeight
 
             // title
             if (title)
@@ -152,7 +162,7 @@
             this.node.appendChild(buttonsContainer);
 
             document.body.appendChild(this.node);
-            center(this.node);
+            center(this.node, this.minimumWidth, this.minimumHeight);
         }
     };
 
@@ -186,14 +196,19 @@
     // -------------------------------------------------------------------------
     // APPEND DIALOG
     // -------------------------------------------------------------------------
-    Dialog.appendDialogBox = function(title, message, buttonHandlers, content) {
+    // title            = the dialog title
+    // message          = the dialog message
+    // buttonHandlers   = handlers to create buttons and handle clicks
+    // minimumWidth     = the minimum width in percent
+    // minimumHeight    = the minimum height in percent
+    Dialog.appendDialogBox = function(title, message, buttonHandlers, content, minimumWidth, minimumHeight) {
 
         if (buttonHandlers == undefined || buttonHandlers.length < 1)
         {
             buttonHandlers = [defaultHandler];
         }
 
-        var newDialogBox = new DialogBox(title, message, buttonHandlers, content);
+        var newDialogBox = new DialogBox(title, message, buttonHandlers, content, minimumWidth, minimumHeight);
 
         boxes.push(newDialogBox);
     };
@@ -214,7 +229,7 @@
         for (var i = 0; i < boxes.length; ++i)
         {
             var dialogBox = boxes[i].node;
-            center(dialogBox);
+            center(dialogBox, boxes[i].minimumWidth, boxes[i].minimumHeight);
         }
     });
 }) (window.Dialog = window.Dialog || {});

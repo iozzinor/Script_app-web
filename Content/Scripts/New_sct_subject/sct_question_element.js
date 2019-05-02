@@ -14,7 +14,7 @@
     // -------------------------------------------------------------------------
     function createQuestionDeleteButton(question)
     {
-        var deleteButton = createHoverableButton(undefined, 'Delete question', 'red', 'var(--hover-button-delete-bg)');
+        var deleteButton = createHoverableButton(undefined, _d('new_sct_subject', 'Delete Question'), 'red', 'var(--hover-button-delete-bg)');
         deleteButton.addEventListener('click', function(event) {
             NewSctSubject.deleteSctQuestion(question.id);
         });
@@ -50,7 +50,7 @@
 
         // number
         var questionNumberElement = document.createElement('p');
-        questionNumberElement.appendChild(document.createTextNode('Question ' + question.id));
+        questionNumberElement.appendChild(document.createTextNode(Main.sprintf(_d('new_sct_subject', 'Question %1'), question.id)));
         questionNumberElement.draggable = 'true';
         questionNumberElement.ondragstart = function(event) {
             event.dataTransfer.setData('question_number', question.id);
@@ -157,7 +157,7 @@
 
     function createSctTopicsEditButton(questionNumber)
     {
-        var editButton = createHoverableButton(undefined, 'Edit', 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)');
+        var editButton = createHoverableButton(undefined, _d('new_sct_subject', 'Edit'), 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)');
         editButton.id = 'sct_topic_' + questionNumber;
         editButton.addEventListener('click', function (event) {
 
@@ -168,7 +168,7 @@
             NewSctSubject.topicsSelection.update(question);
 
             // display the topics selection dialog box
-            Dialog.appendDialogBox('Edit SCT Topics', 'Choose the topics.',
+            Dialog.appendDialogBox(_d('new_sct_subject', 'Edit SCT Topics'), _d('new_sct_subject', 'Choose the topics.'),
                 NewSctSubject.subjectElement.topicsSelectionButtonHandlers, NewSctSubject.subjectElement.topicsSelection);
         });
         return editButton;
@@ -178,7 +178,7 @@
     {
         var wording = document.createElement('textarea');
         wording.id = 'sct_wording_' + questionNumber;
-        wording.placeholder = 'Describe the patient case...';
+        wording.placeholder = _d('new_sct_subject', 'Describe the patient case...');
         wording.addEventListener('input', function(event) {
             var questionNumber = parseInt(event.target.id.replace('sct_wording_', ''));
             var question = NewSctSubject.questions[questionNumber - 1];
@@ -193,7 +193,7 @@
         // ---------------------------------------------------------------------
         // SCT TYPES
         // sct types label
-        var sctTypesLabel = document.createTextNode('SCT Type:');
+        var sctTypesLabel = document.createTextNode(_d('new_sct_subject', 'SCT Type:'));
 
         // sct types select
         var sctTypesSelect = createSctTypesSelect(question.id);
@@ -205,7 +205,7 @@
         // ---------------------------------------------------------------------
         // SCT TOPICS
         // sct topics label
-        var sctTopicsLabel = document.createTextNode('SCT Topics:');
+        var sctTopicsLabel = document.createTextNode(_d('new_sct_subject', 'SCT Topics:'));
 
         // sct topics list
         var sctTopicsList = createSctTopicsList();
@@ -220,7 +220,7 @@
         // ---------------------------------------------------------------------
         // WORDING
         // wording label
-        var wordingLabel = document.createTextNode('Wording:');
+        var wordingLabel = document.createTextNode(_d('new_sct_subject', 'Wording:'));
 
         // wording
         var wording = createQuestionWording(question.id);
@@ -325,7 +325,7 @@
         questionElement.foldHandler.targetNode = foldableContent;
 
         // add item button
-        var addItemButton = createHoverableButton(undefined, 'New Item', 'gray', 'lightgray');
+        var addItemButton = createHoverableButton(undefined, _d('new_sct_subject', 'New Item'), 'gray', 'lightgray');
         addItemButton.id = 'add_item_' + question.id;
         foldableContent.appendChild(addItemButton);
         addItemButton.style.width = '40%';
@@ -408,7 +408,7 @@
             this.id = newQuestionNumber;
 
             // question number
-            this.numberField.innerHTML = 'Question ' + newQuestionNumber;
+            this.numberField.innerHTML = Main.sprintf(_d('new_sct_subject', 'Question %1'), newQuestionNumber);
 
             // ids
             this.numberField.id         = 'question_number_' + newQuestionNumber;

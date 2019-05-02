@@ -1,4 +1,4 @@
-<p><?=l('welcome_message')?></p>
+<p><?=l('home', 'welcome_message')?></p>
 <?php
     if ($display_new_sct_subject_link)
     {

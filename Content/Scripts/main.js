@@ -102,9 +102,15 @@
             }
             previousPosition = percentPosition;
         }
+        if (previousPosition < format.length)
+        {
+            result += format.substring(previousPosition );
+        }
+
         return result;
     };
 })(window.Main = window.Main || {});
 
 Gettext.bindFunctions();
 Gettext.tryAutomaticLoading();
+Gettext.textdomain('common');

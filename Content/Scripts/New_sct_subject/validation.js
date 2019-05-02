@@ -19,6 +19,8 @@
     // -------------------------------------------------------------------------
     function checkWordings()
     {
+        let errorDescriptionEmptyFormat = _d('new_sct_subject', 'error_description_empty_format');
+        let errorDataFormat = _d('new_sct_subject', 'error_data_format');
         var result = [];
         for (let i = 0; i < NewSctSubject.questions.length; ++i)
         {
@@ -27,7 +29,9 @@
             let wordingElement = document.getElementById('sct_wording_' + questionNumber);
             if (question.wording == '')
             {
-                result.push(new SubjectError('Empty Wording', 'Question Wording ' + questionNumber, 'sct_wording_' + questionNumber, questionNumber));
+                let errorMessage = Main.sprintf(errorDescriptionEmptyFormat, _d('new_sct_subject', 'edit_questions_wording'));
+                let errorLink =  Main.sprintf(errorDataFormat, [questionNumber, _d('new_sct_subject', 'edit_questions_wording')]);
+                result.push(new SubjectError(errorMessage, errorLink, 'sct_wording_' + questionNumber, questionNumber));
 
                 wordingElement.className = 'sct_wording_error';
             }
@@ -43,6 +47,7 @@
     {
         var result = [];
         let elementErrorClassName = 'sct_item_' + elementIdBaseName + '_error';
+        let errorDataTypeFormat = _d('new_sct_subject', 'error_data_type_format');
         for (let i = 0; i < NewSctSubject.questions.length; ++i)
         {
             let questionNumber = i + 1;
@@ -61,7 +66,7 @@
                 if (isIncorrect(question.items[j]))
                 {
                     result.push(new SubjectError(errorMessage,
-                        'Question ' + questionNumber + ' - ' + elementName + ' ' + itemNumber,
+                        Main.sprintf(errorDataTypeFormat, [questionNumber, elementName, itemNumber]),
                         elementId,
                         questionNumber,
                         itemNumber));
@@ -79,11 +84,14 @@
     
     function getErrors()
     {
+        let errorDescriptionEmptyFormat = _d('new_sct_subject', 'error_description_empty_format');
+        let errorDescriptionNotSpecifiedFormat = _d('new_sct_subject', 'error_description_not_specified_format');
+
         var result = checkWordings();
-        result = result.concat(checkItemElement('hypothesis', 'Hypothesis', item => item.hypothesis == '', 'Empty Hypothesis'));
-        result = result.concat(checkItemElement('data_text', 'Data Text', item => item.newData.associatedData == '', 'Empty Data Text'));
-        result = result.concat(checkItemElement('data_image', 'Data Image', item => item.newData.associatedData == '', 'Image Not Specified'));
-        result = result.concat(checkItemElement('data_volume', 'Data Volume', item => item.newData.associatedData == '', 'Volume Not Specified'));
+        result = result.concat(checkItemElement('hypothesis', _d('new_sct_subject', 'error_hypothesis'), item => item.hypothesis == '', Main.sprintf(errorDescriptionEmptyFormat, _d('new_sct_subject', 'error_hypothesis'))));
+        result = result.concat(checkItemElement('data_text',  _d('new_sct_subject', 'error_data_type_text'), item => item.newData.associatedData == '', Main.sprintf(errorDescriptionEmptyFormat, _d('new_sct_subject', 'error_data_type_text'))));
+        result = result.concat(checkItemElement('data_image',  _d('new_sct_subject', 'error_data_type_image'), item => item.newData.associatedData == '', Main.sprintf(errorDescriptionNotSpecifiedFormat, _d('new_sct_subject', 'error_data_type_image'))));
+        result = result.concat(checkItemElement('data_volume',  _d('new_sct_subject', 'error_data_type_volume'), item => item.newData.associatedData == '', Main.sprintf(errorDescriptionNotSpecifiedFormat, _d('new_sct_subject', 'error_data_type_volume'))));
 
         result.sort(function (a, b) {
             if (a.questionNumber != b.questionNumber)
@@ -104,7 +112,8 @@
 
         Main.removeAllChildren(errorsList);
 
-        errorsCount.innerHTML = errors.length + ' error(s) detected.';
+        let errorsMessage = Main.sprintf(_n('new_sct_subject', 'one error detected.', errors.length), errors.length);
+        errorsCount.innerHTML = errorsMessage;
 
         for (var i = 0; i < errors.length; ++i)
         {

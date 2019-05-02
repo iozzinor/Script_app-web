@@ -5,8 +5,8 @@
 		 * The suppported languages.
 		 */
 		private static $supported_languages_ = array(
-			"fr" => "fr_FR.utf8",
-			"en" => "en_US"
+			"fr" => array('long' => 'fr_FR.utf8', 'medium' => 'fr_FR'),
+			"en" => array('long' => 'en_US.utf8', 'medium' => 'en_US')
 		);
 
 		private static $default_language_short_name_ = 'en';
@@ -34,7 +34,7 @@
 		private static $language_name_;
 
 		/**
-		 * The current locale.
+		 * The current locale, long.
 		 */
 		private static $locale_;
 
@@ -58,19 +58,28 @@
 			}
 		}
 
-		private static function update_language_($locale)
+		private static function update_language_($short_name)
 		{
-			self::$locale_ = $locale;
-			putenv('LANG=' . $locale);
-			setlocale(LC_ALL, $locale);
+			self::$language_name_ = $short_name;
+			self::$locale_ = self::$supported_languages_[$short_name]['long'];
+			putenv('LANG=' . self::$locale_);
+			setlocale(LC_ALL, self::$locale_);
 		}
 
 		/**
-		 * @return string The current locale.
+		 * @return string The current locale, long format.
 		 */
 		public static function locale()
 		{
 			return self::$locale_;
+		}
+
+		/**
+		 * @return string The current locale, medium format.
+		 */
+		public static function locale_medium()
+		{
+			return self::$supported_languages_[self::$language_name_]['medium'];
 		}
 
 		/**
@@ -107,14 +116,11 @@
 
 			if (array_key_exists($short_name, self::$supported_languages_))
 			{
-				self::$language_name_ = $short_name;
-				$locale_name = self::$supported_languages_[$short_name];
-				self::update_language_($locale_name);
+				self::update_language_($short_name);
 				return $short_name;
 			}
 
-			self::$language_name_ = self::$default_language_short_name_;
-			self::update_language_(self::$supported_languages_[self::$default_language_short_name_]);
+			self::update_language_(self::$default_language_short_name_);
 			return self::$default_language_short_name_;
 		}
 
@@ -143,9 +149,9 @@
 	/**
 	 * Convenience method to replace newlines with <br /> tags.
 	 */
-	function l($message_id)
+	function l($domain, $message_id)
 	{
-		return nl2br(htmlspecialchars(_($message_id), ENT_COMPAT | EN_HTML_401), false);
+		return nl2br(htmlspecialchars(_d($domain, $message_id), ENT_COMPAT | EN_HTML_401), false);
 	}
 
 	function _d($domain, $message_id)

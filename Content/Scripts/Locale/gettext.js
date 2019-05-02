@@ -95,7 +95,7 @@
             // check for plural rules
             if (!('pluralRules' in potentialLanguageData))
             {
-                console.warn('Loaded language data for which no plural rules were defined.');
+                console.warn('Loaded language data for which no plural rules were defined (language locale: ' + key + ').');
             }
             
             languagesData[key] = potentialLanguageData;

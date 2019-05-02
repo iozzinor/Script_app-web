@@ -1,13 +1,13 @@
 (function(NewSctSubject) {
     function createCancelSettingsButtonHandler()
     {
-        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, 'Cancel', 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
+        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, _('Cancel'), 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
     }
 
     function createOkSettingsButtonHandler()
     {
         return new Dialog.ButtonHandler(
-            createHoverableButton.bind(null, undefined, 'Ok', 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'),
+            createHoverableButton.bind(null, undefined, _('Ok'), 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'),
             function (event) {
                 let newValue    = parseInt(newQuestionItemsCount.value);
                 let min         = parseInt(newQuestionItemsCount.min);
@@ -44,7 +44,7 @@
         let newQuestionItemsCountLabel = document.createElement('label');
         newQuestionItemsCountLabel.id = 'new_question_items_count_label';
         newQuestionItemsCountLabel.htmlFor = 'new_question_items_count';
-        newQuestionItemsCountLabel.appendChild(document.createTextNode('New Question Items Count:'));
+        newQuestionItemsCountLabel.appendChild(document.createTextNode(_d('new_sct_subject', 'New Question Items Count:')));
         
         settingsView.appendChild(newQuestionItemsCountLabel);
         settingsView.appendChild(newQuestionItemsCount);

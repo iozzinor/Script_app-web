@@ -1,12 +1,12 @@
 (function(NewSctSubject) {
     function createCancelAddQuestionsButtonHandler()
     {
-        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, 'Cancel', 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
+        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, _('Cancel'), 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
     }
 
     function createOkAddQuestionsButtonHandler()
     {
-        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, 'Ok', 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'),
+        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, _('Ok'), 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'),
             function() {
                 let questionsToAdd = parseInt(newQuestionsCount.value);
                 if (questionsToAdd < 1 || questionsToAdd > NewSctSubject.maxQuestions - NewSctSubject.questions.length)
@@ -29,7 +29,7 @@
         let addQuestionsView = document.createElement('div');
 
         let addQuestionsLabel = document.createElement('label');
-        addQuestionsLabel.appendChild(document.createTextNode('Number of questions to add:'));
+        addQuestionsLabel.appendChild(document.createTextNode(_d('new_sct_subject', 'Number of questions to add:')));
         addQuestionsLabel.htmlFor = 'add_questions_count';
 
         addQuestionsView.appendChild(addQuestionsLabel);

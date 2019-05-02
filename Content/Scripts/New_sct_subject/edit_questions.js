@@ -4,7 +4,7 @@
     // -------------------------------------------------------------------------
     function createToolbarSelectAllButton()
     {
-        let selectAllButton = createHoverableButton(undefined, 'Select All', 'green', 'lightgreen');
+        let selectAllButton = createHoverableButton(undefined, _d('new_sct_subject', 'Select All'), 'green', 'lightgreen');
         selectAllButton.addEventListener('click', function (event) {
             let newSelected = !allQuestionsSelected();
             let checkboxes = editQuestionsElement.editQuestionsView.querySelectorAll('[type=checkbox]');
@@ -22,13 +22,13 @@
 
     function createToolbarDeleteButton()
     {
-        let deleteButton = createHoverableButton(undefined, 'Delete', 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg)');
+        let deleteButton = createHoverableButton(undefined, _d('new_sct_subject', 'Delete'), 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg)');
         deleteButton = createDisableButton(deleteButton, 'lightgray', 'black', 'gray');
         deleteButton.addEventListener('click', function (event) {
             let cancelHandler = new Dialog.ButtonHandler(
-                createHoverableButton.bind(null, undefined, 'No', 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
+                createHoverableButton.bind(null, undefined, _('No'), 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
             let okHandler = new Dialog.ButtonHandler(
-                createHoverableButton.bind(null, undefined, 'Yes', 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg)'),
+                createHoverableButton.bind(null, undefined, _('Yes'), 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg)'),
                 function() {
                     removeQuestions(questionsToDelete);
                     return true;
@@ -43,8 +43,9 @@
                 }
             }
 
-            Dialog.appendDialogBox('Questions Deletion', 'Are you sure you want to delete the selected questions (' + questionsToDelete.length + ') ?',
-                [cancelHandler, okHandler]);
+            let deleteMessageFormat = _n('new_sct_subject', 'Are you sure you want to delete the selected question ?', questionsToDelete.length)
+            let deleteMessage = Main.sprintf(deleteMessageFormat, questionsToDelete.length);
+            Dialog.appendDialogBox(_d('new_sct_subject', 'Questions Deletion'), deleteMessage, [cancelHandler, okHandler]);
         });
         return deleteButton;
     }
@@ -82,13 +83,13 @@
         // <checkbox> <question number> <question wording> <buttons>
         let questionCell = document.createElement('th');
         questionCell.colSpan = 2;
-        questionCell.appendChild(document.createTextNode('Question'));
+        questionCell.appendChild(document.createTextNode(_d('new_sct_subject', 'edit_questions_question')));
 
         let wordingCell = document.createElement('th');
-        wordingCell.appendChild(document.createTextNode('Wording'));
+        wordingCell.appendChild(document.createTextNode(_d('new_sct_subject', 'edit_questions_wording')));
 
         let buttonsCell = document.createElement('th');
-        buttonsCell.appendChild(document.createTextNode('Actions'));
+        buttonsCell.appendChild(document.createTextNode(_d('new_sct_subject', 'edit_questions_actions')));
         buttonsCell.className = "question_edit_buttons"
 
         Main.appendChildren(questionsListHeader, [questionCell, wordingCell, buttonsCell]);
@@ -99,7 +100,7 @@
     function createQuestionEditButtons(questionNumber)
     {
         let buttons = [];
-        let deleteButton = createHoverableButton(undefined, 'Delete', 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg');
+        let deleteButton = createHoverableButton(undefined, _d('new_sct_subject', 'Delete'), 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg');
         deleteButton.id = 'edit_delete_question_' + questionNumber;
         deleteButton.addEventListener('click', function (event) {
             let questionNumber = parseInt(event.target.id.replace(/.*_/, ''));
@@ -167,12 +168,12 @@
     
     function createCancelEditQuestionsHandler()
     {
-        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, 'Cancel', 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
+        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, _('Cancel'), 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'));
     }
 
     function createDoneEditQuestionsHandler()
     {
-        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, 'Done', 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'));
+        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, _('Ok'), 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'));
     }
 
     // -------------------------------------------------------------------------
@@ -263,7 +264,7 @@
     function refreshSelection()
     {
         let allSelected = allQuestionsSelected();
-        selectAllButton.value = allSelected ? 'Deselect All' : 'Select All';
+        selectAllButton.value = allSelected ? _d('new_sct_subject', 'Unselect All') : _d('new_sct_subject', 'Select All');
 
         if (selection.length < 2 || allSelected || noQuestionSelected())
         {

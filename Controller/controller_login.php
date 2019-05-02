@@ -39,7 +39,7 @@
             $attempts = $_SESSION['attempts'];
 
             $view_information = array(
-                'title'                 => 'Login',
+                'title'                 => _d('login', 'title'),
                 'navigation_links'      => ControllerSecure::get_navigation_links(),
                 'username'              => '',
                 'password'              => '',

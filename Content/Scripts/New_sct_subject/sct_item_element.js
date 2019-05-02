@@ -102,7 +102,7 @@
     // ---------------------------------------------------------------------
     function createDeleteButton(questionNumber, itemNumber)
     {
-        var deleteButton = createHoverableButton(undefined, 'Delete', 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg)');
+        var deleteButton = createHoverableButton(undefined, _d('new_sct_subject', 'Delete'), 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg)');
         deleteButton.className += " delete_button";
 
         if (itemNumber < 2)
@@ -131,7 +131,7 @@
 
         var deleteButton = createDeleteButton(questionNumber, itemNumber);
         var itemNumberElement = document.createElement('p');
-        itemNumberElement.appendChild(document.createTextNode('Item ' + itemNumber));
+        itemNumberElement.appendChild(document.createTextNode(Main.sprintf(_d('new_sct_subject', 'Item %1'), itemNumber)));
 
         var itemButtonsToolbox = createButtonsToolbox([deleteButton]);
 
@@ -160,7 +160,7 @@
     {
         var hypothesisField = document.createElement('input');
 
-        hypothesisField.placeholder = "The hypothesis...";
+        hypothesisField.placeholder = _d('new_sct_subject', 'The Hypothesis...');
         hypothesisField.addEventListener('input', function (event) {
             var itemIdentification = extractNumber(event.target.id);
             var question = NewSctSubject.questions[itemIdentification.question - 1];
@@ -200,7 +200,7 @@
     function createDataText()
     {
         var dataText = document.createElement('input');
-        dataText.placeholder = 'The New Data...';
+        dataText.placeholder = _d('new_sct_subject', _d('new_sct_subject', 'The New Data...'));
         return dataText;
     }
 
@@ -246,14 +246,14 @@
 
         // hypothesis
         var hypothesisField = createHypothesisField();
-        var hypothesisRow = NewSctSubject.createTableRow([undefined, document.createTextNode('Hypothesis:'), hypothesisField]);
+        var hypothesisRow = NewSctSubject.createTableRow([undefined, document.createTextNode(_d('new_sct_subject', 'Hypothesis:')), hypothesisField]);
 
         // data type
         var dataTypeSelect = createItemDataTypeSelect();
-        var dataTypeRow = NewSctSubject.createTableRow([undefined, document.createTextNode('New Data Type:'), dataTypeSelect]);
+        var dataTypeRow = NewSctSubject.createTableRow([undefined, document.createTextNode(_d('new_sct_subject', 'New Data Type:')), dataTypeSelect]);
 
         // data
-        var dataRow = NewSctSubject.createTableRow([undefined, document.createTextNode('New Data:'), undefined]);
+        var dataRow = NewSctSubject.createTableRow([undefined, document.createTextNode(_d('new_sct_subject', 'New Data:')), undefined]);
 
         tableItemNode.appendChild(hypothesisRow);
         tableItemNode.appendChild(dataTypeRow);
@@ -326,24 +326,24 @@
             {
                 var currentType = SctDataType.types[i];
 
-                if (currentType.name.toLowerCase() in this.dataHandlers)
+                if (currentType.nameCode.toLowerCase() in this.dataHandlers)
                 {
-                    this.dataHandlers[currentType.name.toLowerCase()].updateId(itemIdentification);
+                    this.dataHandlers[currentType.nameCode.toLowerCase()].updateId(itemIdentification);
                 }
             }
         }
 
         setDataType(dataType)
         {
-            if (dataType.name == this.currentDataTypeName)
+            if (dataType.nameCode == this.currentDataTypeName)
             {
                 return;
             }
-            this.currentDataTypeName = dataType.name;
+            this.currentDataTypeName = dataType.nameCode;
             this.currentDataType = dataType;
 
             // the data type is found in the data informaiton array
-            if (dataType.name.toLowerCase() in this.dataHandlers)
+            if (dataType.nameCode.toLowerCase() in this.dataHandlers)
             {
                 this.updateDataType(dataType);
             }
@@ -351,7 +351,7 @@
 
         updateDataType(dataType)
         {
-            var newDataHandler = this.dataHandlers[dataType.name.toLowerCase()];
+            var newDataHandler = this.dataHandlers[dataType.nameCode.toLowerCase()];
 
             if (this.currentDataHandler != newDataHandler)
             {

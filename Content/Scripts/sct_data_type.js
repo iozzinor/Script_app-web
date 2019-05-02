@@ -1,24 +1,25 @@
 class SctDataType
 {
-    constructor(name)
+    constructor(nameCode, name)
     {
-        if (name in SctDataType.names)
+        if (nameCode in SctDataType.nameCodes)
         {
-            console.error('Name ' + name + ' already used => override the SCT data type.');
+            console.error('Name code ' + nameCode + ' already used => override the SCT data type.');
         }
         else
         {
-            SctDataType.names.push(name);
+            SctDataType.nameCodes.push(nameCode);
         }
+        this.nameCode = nameCode;
         this.name = name;
     }
 }
 
-SctDataType.names = [];
+SctDataType.nameCodes = [];
 
 SctDataType.types = [
-    new SctDataType('Text'),
-    new SctDataType('Image'),
-    new SctDataType('Volume')
+    new SctDataType('Text', _d('new_sct_subject', 'data_type_text')),
+    new SctDataType('Image', _d('new_sct_subject', 'data_type_image')),
+    new SctDataType('Volume', _d('new_sct_subject', 'data_type_volume'))
 ];
 

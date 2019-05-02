@@ -32,13 +32,13 @@
 
     function createCancelTopicsSelectionHandler()
     {
-        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, 'Cancel', 'gray', 'lightgray'));
+        return new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, _('Cancel'), 'gray', 'lightgray'));
     }
 
     function createDoneTopicsSelectionHandler()
     {
         return new Dialog.ButtonHandler(
-            createHoverableButton.bind(null, undefined, 'Done', 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'),
+            createHoverableButton.bind(null, undefined, _('Ok'), 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)'),
             function()
             {
                 refreshSelectedTopics();
