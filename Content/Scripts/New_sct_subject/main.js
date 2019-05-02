@@ -5,7 +5,7 @@
     NewSctSubject.updateSubjectStatusFunctions = [
         // questions count
         function () {
-            let questionsFormat = _n('new_sct_subject', 'Question: %1', NewSctSubject.questions.length);
+            let questionsFormat = _dn('new_sct_subject', 'Question: %1', 'Questions: %1', NewSctSubject.questions.length);
             return Main.sprintf(questionsFormat, NewSctSubject.questions.length);
         },
         // items count
@@ -15,7 +15,7 @@
             {
                 itemsCount += NewSctSubject.questions[i].items.length;
             }
-            let itemsFormat = _n('new_sct_subject', 'Item: %1', itemsCount);
+            let itemsFormat = _dn('new_sct_subject', 'Item: %1', 'Items: %1', itemsCount);
             return Main.sprintf(itemsFormat, itemsCount);
         },
         // new items count

@@ -12,7 +12,7 @@
             // redirect the user to the login page if he/she is not connected yet
             if (!Login::is_logged_in())
             {
-                header('Location: ' . Router::get_base_url() . 'login');
+                header('Location: ' . Router::get_base_url() . 'login?try_to_forward_to=' . Router::get_query());
                 exit;
             }
             parent::execute_action($name);

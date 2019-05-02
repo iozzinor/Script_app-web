@@ -117,7 +117,6 @@
     {
         let languageSelectionNavigation = document.getElementById('site_language');
         let languagesList = document.querySelector('#site_language ul');
-        console.log(languagesList);
         languagesList.style.display = 'none';
 
         languageSelectionNavigation.addEventListener('mouseover', function(event) {

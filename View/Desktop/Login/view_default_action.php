@@ -13,7 +13,8 @@
     }
     if ($attempts > 0)
     {
-        print('<p class="login_error">' . $attempts . ' attempts</p>');
+        $wrong_attemps_message = sprintf(_dn('login', 'One wrong attempt.', '%d wrong attempts.', $attempts), $attempts);
+        print('<p class="login_error">' . $wrong_attemps_message . '</p>');
     }
     
     ?>

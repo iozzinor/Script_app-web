@@ -43,7 +43,7 @@
                 }
             }
 
-            let deleteMessageFormat = _n('new_sct_subject', 'Are you sure you want to delete the selected question ?', questionsToDelete.length)
+            let deleteMessageFormat = _dn('new_sct_subject', 'Are you sure you want to delete the selected question ?', 'Are you sure you want to delete %1 selected questions ?', questionsToDelete.length)
             let deleteMessage = Main.sprintf(deleteMessageFormat, questionsToDelete.length);
             Dialog.appendDialogBox(_d('new_sct_subject', 'Questions Deletion'), deleteMessage, [cancelHandler, okHandler]);
         });

@@ -112,7 +112,7 @@
 
         Main.removeAllChildren(errorsList);
 
-        let errorsMessage = Main.sprintf(_n('new_sct_subject', 'one error detected.', errors.length), errors.length);
+        let errorsMessage = Main.sprintf(_dn('new_sct_subject', 'one error detected.', '%1 errors detected.', errors.length), errors.length);
         errorsCount.innerHTML = errorsMessage;
 
         for (var i = 0; i < errors.length; ++i)

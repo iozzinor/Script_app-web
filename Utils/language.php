@@ -191,4 +191,9 @@
 	{
 		return ngettext($message_id_singular, $message_id_plural, $count);
 	}
+
+	function _dn($domain, $message_id_singular, $message_id_plural, $count)
+	{
+		return dngettext($domain, $message_id_singular, $message_id_plural, $count);
+	}
 ?>

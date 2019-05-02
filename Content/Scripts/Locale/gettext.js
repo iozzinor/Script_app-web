@@ -16,17 +16,21 @@
         return languagesData[currentLanguage][domain].singulars[messageId] || messageId;
     };
 
-    Gettext._n = function(domain, messageId, count) {
+    Gettext._n = function(singularMessageId, pluralMessageId, count) {
+        return Gettext._dn(currentDomain, singularMessageId, pluralMessageId, count);
+    };
+
+    Gettext._dn = function(domain, singularMessageId, pluralMessageId, count) {
         if (
             !currentLanguage ||
             !(currentLanguage in languagesData) ||
             !(domain in languagesData[currentLanguage]) ||
             !('pluralRules' in languagesData[currentLanguage]) ||
             !('plurals' in languagesData[currentLanguage][domain]) ||
-            !(messageId in languagesData[currentLanguage][domain].plurals)
+            !(singularMessageId in languagesData[currentLanguage][domain].plurals)
         )
         {
-            return messageId;
+            return count == 1 ? singularMessageId : pluralMessageId;
         }
 
         // get the rule to apply
@@ -41,7 +45,7 @@
             }
         }
 
-        return languagesData[currentLanguage][domain].plurals[messageId][ruleIndex] || messageId;
+        return languagesData[currentLanguage][domain].plurals[singularMessageId][ruleIndex] || singularMessageId;
     };
 
     Gettext.textdomain = function(domain) {
@@ -77,9 +81,10 @@
 
     Gettext.bindFunctions = function() {
         // export convenience functions
-        window._    = window._  || Gettext._;
-        window._d   = window._d || Gettext._d;
-        window._n   = window._n || Gettext._n;
+        window._    = window._      || Gettext._;
+        window._d   = window._d     || Gettext._d;
+        window._n   = window._n     || Gettext._n;
+        window._dn  = window._dn    || Gettext._dn;
     };
 
     Gettext.tryAutomaticLoading = function() {
