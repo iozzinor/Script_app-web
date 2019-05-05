@@ -1,17 +1,56 @@
 <?php
-    require_once(Configuration::get('root_path') . "Utils/model.php");
+    require_once 'user_preferences.php';
 
-    require_once 'mail_manager.php';
-
-    class User extends Model
+    class User
     {
-        private $mail_manager_;
-
-        public function __construct()
+        // ---------------------------------------------------------------------
+        // AUTHENTICATION
+        // ---------------------------------------------------------------------
+        /**
+         * @return int The user id or -1 if the user can not be authenticated.
+         */
+        public function authenticate_user($username, $password)
         {
-            parent::__construct('user');
+            $statement = DatabaseHandler::database()->prepare('SELECT id, password_hash FROM user WHERE username LIKE :username');
+            $statement->execute(array(':username' => $username));
 
-            $this->mail_manager_ = new MailManager();
+            if ($user_information = $statement->fetch())
+            {
+                $password_hash = $user_information['password_hash'];
+
+                if (password_verify($password, $password_hash))
+                {
+                    return $user_information['id'];
+                }
+            }
+            return -1;
+        }
+
+        // ---------------------------------------------------------------------
+        // PREFERENCES
+        // ---------------------------------------------------------------------
+        /**
+         * @return UserPreferences The user preferences for the given user or null if it is not found.
+         */
+        public function load_preferences($user_id)
+        {
+            $query =    "SELECT language.short_name AS language_short_name FROM language" .
+                        "   INNER JOIN (" .
+                        "       SELECT preferences.language_id AS language_id" .
+                        "       FROM preferences" .
+                        "       INNER JOIN user" .
+                        "       ON user.preferences_id = preferences.id" .
+                        "       WHERE user.id = :user_id" .
+                        "   ) AS query" .
+                        "   ON language.id = query.language_id";
+            $statement = DatabaseHandler::database()->prepare($query);
+            $statement->execute(array(':user_id' => $user_id));
+            if ($result = $statement->fetch())
+            {
+                $language_short_name = $result['language_short_name'];
+                return new UserPreferences($language_short_name);
+            }
+            return null;
         }
 
         // ---------------------------------------------------------------------
@@ -160,25 +199,6 @@
             }
 
             return null;
-        }
-
-        /**
-         * @return int The user id or -1 if the user can not be authenticated.
-         */
-        public function authenticate_user($username, $password)
-        {
-            $sql_result = $this->execute_request('SELECT id, password_hash FROM user WHERE username=:username',
-                array(':username' => $username));
-
-            while ($result = $sql_result->fetchArray(SQLITE3_ASSOC))
-            {
-                $user_id = $result['id'];
-                if (password_verify($password, $result['password_hash']))
-                {
-                    return $user_id;
-                }
-            }
-            return -1;
         }
 
         /**

@@ -11,6 +11,10 @@ VARIABLES
     --hover-button-default-bg: rgb(124,176,245);
     --hover-button-alternate-border: rgb(220, 111, 15);
     --hover-button-alternate-bg: rgb(235, 180, 146);
+
+    --disable-button-bg: lightgray;
+    --disable-button-border: black;
+    --disable-button-color: gray;
 }
 
 /*******************************************************************************

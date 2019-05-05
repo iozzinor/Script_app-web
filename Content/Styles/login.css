@@ -1,3 +1,24 @@
+.login
+{
+    width: 70%;
+    margin: auto;
+}
+
+.login table td,th
+{
+    border: none;
+}
+
+.login table tr td:first-of-type
+{
+    width: 20%;
+}
+
+#username, #password
+{
+    width: 50%;
+}
+
 .login_error
 {
     color: red;

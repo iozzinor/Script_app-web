@@ -4,6 +4,7 @@
 
 	// Utils
 	require_once(Router::get_base_path() . '/Utils/generation_time.php');
+	require_once(Router::get_base_path() . '/Utils/database_handler.php');
 	require_once(Router::get_base_path() . '/Utils/request.php');
 	require_once(Router::get_base_path() . '/Utils/language.php');
 	require_once(Router::get_base_path() . '/Utils/controller.php');
@@ -116,6 +117,7 @@
 				'not_found',
 				'home',
 				'login',
+				'sign_in',
 				'new_sct_subject'
 				)
 			);

@@ -2,9 +2,7 @@
     require_once 'sct_subject.php';
     require_once 'sfm_subject.php';
 
-    require_once(Router::get_base_path() . '/Utils/model.php');
-    
-    class Sct extends Model
+    class Sct
     {
         /**
          * The user id that should be specified to retrieve SCT information.
@@ -18,8 +16,6 @@
 
         public function __construct()
         {
-            parent::__construct('sct');
-
             $this->retrieve_published_state_id_();
         }
 

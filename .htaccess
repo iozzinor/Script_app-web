@@ -7,7 +7,8 @@ RewriteRule ^(.*)$ %{HOST_SCHEME}%{HOST_NAME}/$1/ [R=301,L]
 
 # allow direct access to Admin and Content folders
 RewriteCond %{REQUEST_URI} ^/Admin.* [OR]
-RewriteCond %{REQUEST_URI} ^/Content.*
+RewriteCond %{REQUEST_URI} ^/Content.* [OR]
+RewriteCond %{REQUEST_URI} ^/configuration.php
 RewriteRule ^(.*)$ $1 [L]
 
 # redirect api requests

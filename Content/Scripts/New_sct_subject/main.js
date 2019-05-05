@@ -128,10 +128,9 @@
             [_d('new_sct_subject', 'Delete'), 'var(--hover-button-delete-border)', 'var(--hover-button-delete-bg)', confirmDelete],
             [_d('new_sct_subject', 'Save Draft'), 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)', function(){}],
             [_d('new_sct_subject', 'Validate'), 'var(--hover-button-alternate-border)', 'var(--hover-button-alternate-bg)', function(event){
-                let form = document.getElementById('sct_form');
                 if (NewSctSubject.validate())
                 {
-                    form.submit();
+                   NewSctSubject.sendSubject();
                 }
             }]
         ];

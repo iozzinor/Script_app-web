@@ -16,7 +16,7 @@
 		{
 			$default_parameters = parse_ini_file(Router::get_base_path() . '/Configuration/default.ini');
 
-			$this->parameter_sources_ = [$_COOKIE, $_GET, $_POST, $default_parameters];
+			$this->parameter_sources_ = [$_GET, $_SESSION, $_COOKIE, $_POST, $default_parameters];
 		}
 
 		/**

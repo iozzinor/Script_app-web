@@ -7,6 +7,8 @@
         public function default_action()
         {
             unset($_SESSION['username']);
+            unset($_SESSION['lang']);
+            unset($_SESSION);
 
             session_destroy();
 

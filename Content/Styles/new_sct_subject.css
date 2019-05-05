@@ -9,6 +9,9 @@ TOOLBAR
     display: flex;
     justify-content: space-between;
     vertical-align: center;
+
+    position: sticky;
+    top: 0;
 }
 
 #sct_subject_status

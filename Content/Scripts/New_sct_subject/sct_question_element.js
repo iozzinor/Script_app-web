@@ -250,11 +250,12 @@
             dragDestinationNumber = question.id;
         };
         questionNode.ondragend = function(event) {
-            this.className = '';
+            this.className = 'sct_question';
         };
         questionNode.ondragexit = questionNode.ondragend;
         questionNode.ondrop = function(event) {
             event.preventDefault();
+            this.className = 'sct_question';
 
             // switch the target and the destination
             let destinationId = dragDestinationNumber;

@@ -143,13 +143,27 @@
         errorsSection.style.display = (errors.length > 0 ? 'block' : 'none');
     }
 
+    function hideErrors()
+    {
+        let errorsSection = document.getElementById('errors_section');
+        errorsSection.style.display = 'none';
+    }
+
     NewSctSubject.validate = function() {
         let errors = getErrors();
         if (errors.length > 0)
         {
             displayErrors(errors);
         }
+        else
+        {
+            hideErrors();
+        }
 
         return errors.length < 1;
+    };
+
+    NewSctSubject.sendSubject = function() {
+        Dialog.appendDialogBox('test', 'this is a test');
     };
 })(window.NewSctSubject = window.NewSctSubject || {});

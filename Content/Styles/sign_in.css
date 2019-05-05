@@ -1,0 +1,83 @@
+/*******************************************************************************
+SECTION
+*******************************************************************************/
+.sign_in_section
+{
+    border-radius: 5px;
+    box-shadow: 0 4px 10px gray;
+
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.sign_in_section_caption
+{
+    color: gray;
+    font-size: 0.9em;
+}
+
+/*******************************************************************************
+ROW
+*******************************************************************************/
+.sign_in_row
+{
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+}
+
+.sign_in_row > label,.password_label_container
+{
+    text-align: right;
+    margin-right: 10px;
+}
+
+.sign_in_row label,input,.password_label_container
+{
+    width: 100%;
+}
+
+/*******************************************************************************
+INFORMATION BUTTON
+*******************************************************************************/
+.password_label_container
+{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row-reverse;
+}
+
+.sign_in_row .information_button
+{
+    visibility: hidden;
+    color: blue;
+    border-radius: 5px;
+    width: 20%;
+    margin-left: 10%;
+}
+
+.information_button
+{
+    display: inline-block;
+}
+
+.sign_in_row:hover .information_button
+{
+    visibility: visible;
+    z-index: 1;
+}
+
+/*******************************************************************************
+BUTTON
+*******************************************************************************/
+#sign_in_button
+{
+    width: 30%;
+    margin: auto;
+    display: block;
+}
