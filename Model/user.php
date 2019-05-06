@@ -172,13 +172,8 @@
          */
         public function get_all_users()
         {
-            $sql_result = $this->execute_request('SELECT * FROM USER');
-            $result = array();
-            while ($current_result = $sql_result->fetchArray(SQLITE3_ASSOC))
-            {
-                array_push($result, $current_result);
-            }
-            return $result;
+            $result = DatabaseHandler::database()->query('SELECT * FROM user');
+            return $result->fetchAll(PDO::FETCH_CLASS);
         }
 
         // ---------------------------------------------------------------------

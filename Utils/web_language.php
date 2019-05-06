@@ -1,5 +1,5 @@
 <?php
-    class Language
+    class WebLanguage
     {
 		/**
 		 * The suppported languages.
@@ -40,8 +40,8 @@
 
 			self::$locale_path_ = Router::get_base_path() . '/Locale';
 			// bind the domains
-			array_push(self::$supported_languages_, new Language('fr', 'fr_FR', 'fr_FR.utf8', 'Français'));
-			array_push(self::$supported_languages_, new Language('en', 'en_US', 'en_US.utf8', 'English'));
+			array_push(self::$supported_languages_, new WebLanguage('fr', 'fr_FR', 'fr_FR.utf8', 'Français'));
+			array_push(self::$supported_languages_, new WebLanguage('en', 'en_US', 'en_US.utf8', 'English'));
 			
 			foreach (self::$domains_ as $domain)
 			{

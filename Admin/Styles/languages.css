@@ -1,0 +1,51 @@
+table tr:hover, .selected
+{
+    background: rgb(255, 233, 199);
+}
+
+table tr:first-of-type th:first-of-type
+{
+    background: white;
+    border: none;
+}
+
+#languages_table
+{
+    margin-bottom: 10px;
+}
+
+table td:first-of-type
+{
+    width: 4%;
+}
+
+#add_language_form
+{
+    margin-top: 30px;
+}
+
+#add_language_form table tr:hover
+{
+    background-color: white;
+}
+
+#add_language_form table td,th
+{
+    border: none;
+}
+
+#add_language_form td:first-of-type
+{
+   width: 20%;
+}
+
+#add_language_form td:nth-child(2) input
+{
+   width: 50%;
+}
+
+.new_language_error
+{
+    color: red;
+}
+

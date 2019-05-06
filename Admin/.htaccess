@@ -2,3 +2,7 @@ AuthName "Ma page d'administration protégée par un mot de passe"
 AuthType Basic
 AuthUserFile '/var/www/Admin/.htpasswd'
 Require valid-user
+
+# prevent the user to access the utils folder
+#RewriteEngine on
+#RewriteRule ^Utils.* /Admin/index.html [R,L]

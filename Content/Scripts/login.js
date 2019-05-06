@@ -14,26 +14,8 @@
         form.appendChild(loginButton);
     }
 
-    function getLanguage()
-    {
-        let location = window.location.href;
-        let language = location.replace(/[^:]+[:][/]{2}[^/]+[/]/, '');
-        
-        let match = /[^/]+/.exec(language);
-
-        if (match == null || match.length < 1)
-        {
-            return 'en';
-        }
-        language = match[0];
-
-        return language;
-    }
-
     function checkCredentials(username, password)
     {
-        let language = getLanguage();
-
         let request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             switch (this.readyState)
@@ -58,14 +40,15 @@
                     break;
                 // success
                 case 200:
-                    let newPath = this.responseText;
-                    window.location.replace(newPath);
+                    let newLanguage = this.responseText;
+                    let redirectionPath = document.getElementById('forward_redirection').value;
+                    window.location.replace('/' + newLanguage + '/' + redirectionPath);
                 default:
                     break;
             }
         };
 
-        request.open('POST', '/' + language + '/login/perform', true);
+        request.open('POST', '/en/login/perform', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         request.send('username=' + username + '&password=' + password);
     }

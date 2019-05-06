@@ -4,9 +4,10 @@
 
 	// Utils
 	require_once(Router::get_base_path() . '/Utils/generation_time.php');
+	require_once(Router::get_base_path() . '/Utils/configuration.php');
 	require_once(Router::get_base_path() . '/Utils/database_handler.php');
 	require_once(Router::get_base_path() . '/Utils/request.php');
-	require_once(Router::get_base_path() . '/Utils/language.php');
+	require_once(Router::get_base_path() . '/Utils/web_language.php');
 	require_once(Router::get_base_path() . '/Utils/controller.php');
 	require_once(Router::get_base_path() . '/Utils/controller_information.php');
 	require_once(Router::get_base_path() . '/Utils/controller_secure.php');
@@ -39,7 +40,7 @@
 		 */
 		public static function get_base_url()
 		{
-			return Router::get_raw_base_url() . Language::get_current_language()->get_short_name() . '/';
+			return Router::get_raw_base_url() . WebLanguage::get_current_language()->get_short_name() . '/';
 		}
 
 		public static function get_base_path()
@@ -112,7 +113,7 @@
 
 		protected function find_language($lang)
 		{
-			Language::load_domains(array(
+			WebLanguage::load_domains(array(
 				'common',
 				'not_found',
 				'home',
@@ -121,7 +122,7 @@
 				'new_sct_subject'
 				)
 			);
-			$actual_lang = Language::set_language($lang);
+			$actual_lang = WebLanguage::set_language($lang);
 			if ($actual_lang != $lang)
 			{
 				header('Location: ' . Router::get_base_url() . self::$query_);

@@ -88,6 +88,7 @@
             if ($preferences != null)
             {
                 $_SESSION['lang'] = $preferences->get_language_short_name();
+                print($preferences->get_language_short_name());
             }
         }
 

@@ -17,9 +17,9 @@
         <ul>
             <?php
                 $base_url = Router::get_raw_base_url();
-                $current_language = Language::get_current_language()->get_short_name();
+                $current_language = WebLanguage::get_current_language()->get_short_name();
                 $query = Router::get_query();
-                foreach (Language::get_supported_languages() as $supported_language)
+                foreach (WebLanguage::get_supported_languages() as $supported_language)
                 {
                     if ($supported_language->get_short_name() == $current_language)
                     {

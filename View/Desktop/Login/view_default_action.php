@@ -12,7 +12,7 @@
             </tr>
         </table>
 
-        <input type="hidden" value="<?= $forward_redirection ?>" />
+        <input id="forward_redirection" type="hidden" value="<?= $forward_redirection ?>" />
         <?php
             if ($attempts < 1)
             {

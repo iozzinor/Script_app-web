@@ -5,9 +5,11 @@
     {
         public function generate_database()
         {
-            define(PARAM_host_name, '172.21.0.3');
-            define(PARAM_db_name, 'scriptapp_db');
-            return new PDO('mysql:host=' . PARAM_host_name . ';dbname=' . PARAM_db_name . ';charset=utf8', 'root', 'example');
+            $pdo_path = 'mysql:host=' .
+                Configuration::get('database_host') .
+                ';dbname=' . Configuration::get('database_name') .
+                ';charset=utf8;';
+            return new PDO($pdo_path, Configuration::get('database_user'), Configuration::get('database_password'));
         }
     }
 ?>

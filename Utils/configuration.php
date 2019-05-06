@@ -17,8 +17,7 @@
 			if (self::$parameters_ == null)
 			{
 				// get the current directory path
-				$parentDirectoryPath = dirname(__FILE__);
-				$configurationDirectoryPath = $parentDirectoryPath . "/Configuration";
+				$configurationDirectoryPath = Router::get_base_path() . '/Configuration';
 				
 				$configurationPath = $configurationDirectoryPath . "/production.ini";
 				if (!file_exists($configurationPath))
