@@ -1,5 +1,9 @@
 
 <div id="main_toolbar">
+    <div id="sct_language_container">
+        <label id="sct_language_label" for="sct_language"></label>
+        <select id="sct_language" name="sct_language"></select>
+    </div>
     <p id="sct_subject_status"></p>
     <div id="main_toolbar_buttons">
     </div>

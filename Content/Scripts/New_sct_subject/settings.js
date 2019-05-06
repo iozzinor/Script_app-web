@@ -30,8 +30,8 @@
         let newQuestionItemsCount = document.createElement('input');
         newQuestionItemsCount.id    = 'new_question_items_count';
         newQuestionItemsCount.type  = 'number';
-        newQuestionItemsCount.min   = 3;
-        newQuestionItemsCount.max   = 10;
+        newQuestionItemsCount.min   = NewSctSubject.minQuestionsItemsCount;
+        newQuestionItemsCount.max   = NewSctSubject.maxQuestionsItemsCount;
         return newQuestionItemsCount;
     }
 
@@ -56,8 +56,11 @@
         newQuestionItemsCount.value = NewSctSubject.newQuestionItemsCount;
     };
 
+    NewSctSubject.minQuestionsItemsCount = 3;
+    NewSctSubject.maxQuestionsItemsCount = 10;
     let newQuestionItemsCount = createNewQuestionItemsCount();
-
+    
+    // settings element
     NewSctSubject.settingsButtonHandlers = [
         createCancelSettingsButtonHandler(),
         createOkSettingsButtonHandler()

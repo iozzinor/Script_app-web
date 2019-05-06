@@ -111,96 +111,39 @@
         }
 
         // ---------------------------------------------------------------------
-        // SCT TOPIC
-        // ---------------------------------------------------------------------
-        public function get_sct_topics()
-        {
-            /*$sql_result = $this->execute_request('SELECT id, name FROM sct_topic;');
-
-            $result = array();
-            while ($current_topic = $sql_result->fetchArray(SQLITE3_ASSOC))
-            {
-                array_push($result, $current_topic);
-            }
-            return $result;*/
-
-            return array('test topic 1', 'test topic 2');
-        }
-
-        /**
-         * @return bool Whether the name has been added.
-         */
-        public function add_sct_topic(string $topic_name)
-        {
-            // check that the name does not exist
-            $sql_result = $this->execute_request('SELECT count(id) AS topics_count FROM sct_topic WHERE name LIKE :name', array(':name' => $topic_name));
-            if ($result = $sql_result->fetchArray(SQLITE3_ASSOC))
-            {
-                if ($result['topics_count'] > 0)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-
-            $this->execute_request('INSERT INTO sct_topic (name) VALUES (:name)', array(':name' => $topic_name));
-
-            return true;
-        }
-
-        public function delete_sct_topic(string $topic_name)
-        {
-            $this->execute_request('DELETE FROM sct_topic WHERE name LIKE :name', array('name' => $topic_name));
-        }
-
-        // ---------------------------------------------------------------------
         // SCT TYPE
         // ---------------------------------------------------------------------
         public function get_sct_types()
         {
-            /*$sql_result = $this->execute_request('SELECT id, name FROM sct_type;');
-
             $result = array();
-            while ($current_type = $sql_result->fetchArray(SQLITE3_ASSOC))
+            $query_result = DatabaseHandler::database()->query('SELECT id, name FROM sct_type;');
+            while ($current_row = $query_result->fetch(PDO::FETCH_ASSOC))
             {
-                array_push($result, $current_type);
+                array_push($result, $current_row);
             }
-            return $result;*/
-            return array('test type 1', 'test type 2');
+
+            $query_result->closeCursor();
+            
+            return $result;
         }
 
-        /**
-         * @return bool Whether the name has been added.
-         */
-        public function add_sct_type(string $type_name)
+        // ---------------------------------------------------------------------
+        // SCT TOPIC
+        // ---------------------------------------------------------------------
+        public function get_sct_topics()
         {
-            // check that the name does not exist
-            $sql_result = $this->execute_request('SELECT count(id) AS types_count FROM sct_type WHERE name LIKE :name', array(':name' => $type_name));
-            if ($result = $sql_result->fetchArray(SQLITE3_ASSOC))
+            $result = array();
+            $query_result = DatabaseHandler::database()->query('SELECT id, name FROM sct_topic;');
+            while ($current_row = $query_result->fetch(PDO::FETCH_ASSOC))
             {
-                if ($result['types_count'] > 0)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
+                array_push($result, $current_row);
             }
 
-            $this->execute_request('INSERT INTO sct_type (name) VALUES (:name)', array(':name' => $type_name));
-
-            return true;
+            $query_result->closeCursor();
+            
+            return $result;
         }
-
-        public function delete_sct_type(string $type_name)
-        {
-            $this->execute_request('DELETE FROM sct_type WHERE name LIKE :name', array(':name' => $type_name));
-        }
-
+        
         // ---------------------------------------------------------------------
         // UTILS
         // ---------------------------------------------------------------------

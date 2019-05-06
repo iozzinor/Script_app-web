@@ -119,7 +119,9 @@
 				'home',
 				'login',
 				'sign_in',
-				'new_sct_subject'
+				'new_sct_subject',
+				'sct_types',
+				'sct_topics'
 				)
 			);
 			$actual_lang = WebLanguage::set_language($lang);

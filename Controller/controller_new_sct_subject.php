@@ -1,5 +1,6 @@
 <?php
     require_once(Router::get_base_path() . '/Model/sct.php');
+    require_once(Router::get_base_path() . '/Model/language.php');
 
     class ControllerNewSctSubject extends ControllerSecure
     {
@@ -70,9 +71,13 @@
          */
         private function make_sct_information_script_()
         {
+            // retrieve information
             $sct = new Sct();
             $sct_types = $sct->get_sct_types();
             $sct_topics = $sct->get_sct_topics();
+
+            $language = new Language();
+            $sct_languages = $language->get_all_languages();
 
             // open script
             $script = '<script>';
@@ -83,7 +88,8 @@
             $script .= 'NewSctSubject.sctTypes = [];';
             foreach ($sct_types as $sct_type)
             {
-                $new_type = '{id:"' . $sct_type['id'] . '",name:"' . $sct_type['name'] . '"}';
+                $sct_type_name = _d('sct_types', $sct_type['name']);
+                $new_type = '{id:"' . $sct_type['id'] . '",name:"' . $sct_type_name . '"}';
 
                 $script .= 'NewSctSubject.sctTypes.push(' . $new_type . ');';
             }
@@ -92,9 +98,19 @@
             $script .= 'NewSctSubject.sctTopics = [];';
             foreach ($sct_topics as $sct_topic)
             {
-                $new_topic = '{id:"' . $sct_topic['id'] . '",name:"' . $sct_topic['name'] . '"}';
+                $sct_topic_name = _d('sct_topics', $sct_topic['name']);
+                $new_topic = '{id:"' . $sct_topic['id'] . '",name:"' . $sct_topic_name . '"}';
 
                 $script .= 'NewSctSubject.sctTopics.push(' . $new_topic . ');';
+            }
+
+            // sct languages
+            $script .= 'NewSctSubject.sctLanguages = [];';
+            foreach ($sct_languages as $sct_language)
+            {
+                $new_language = '{id:' . $sct_language->id . ',name:"' . $sct_language->name . '",shortName:"' . $sct_language->short_name. '"}';
+
+                $script .= 'NewSctSubject.sctLanguages.push(' . $new_language . ');';
             }
 
             $script .= '})(window.NewSctSubject=window.NewSctSubject||{});'; // close namespace

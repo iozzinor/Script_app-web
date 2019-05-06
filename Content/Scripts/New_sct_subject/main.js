@@ -45,9 +45,47 @@
     // -------------------------------------------------------------------------
     // CREATE
     // -------------------------------------------------------------------------
-    function populateMainToolbar()
+    function populateLanguages()
     {
-        let mainToolbar = document.getElementById('main_toolbar');
+        NewSctSubject.sctLanguageId = -1;
+        // get current web language
+        let currentLanguageShortName = 'en';
+        let currentLanguageMatch = window.location.href.match(/^[^:]+:[/]{2}[^/]+[/]([^/]+)/);
+        if (!!currentLanguageMatch)
+        {
+            currentLanguageShortName = currentLanguageMatch[1];
+        }
+
+        // update the sct language label
+        let languageSelectLabel = document.getElementById('sct_language_label');
+        languageSelectLabel.appendChild(document.createTextNode(_d('new_sct_subject', 'Language:')));
+
+        // populate the sct language select
+        let languageSelect = document.getElementById('sct_language');
+        for (var i = 0; i < NewSctSubject.sctLanguages.length; ++i)
+        {
+            let currentLanguage = NewSctSubject.sctLanguages[i];
+            let newLanguageOption = document.createElement('option');
+            newLanguageOption.value = currentLanguage.id;
+            newLanguageOption.appendChild(document.createTextNode(currentLanguage.shortName + ' - ' + currentLanguage.name)); 
+
+            languageSelect.appendChild(newLanguageOption);
+
+            if (currentLanguage.shortName == currentLanguageShortName)
+            {
+                languageSelect.value = currentLanguage.id;
+                NewSctSubject.sctLanguageId = currentLanguage.id;
+            }
+        }
+
+        // event listener
+        languageSelect.addEventListener('change', function (event) {
+            NewSctSubject.sctLanguageId = parseInt(event.target.value);
+        });
+    }
+
+    function createToolbarButtons()
+    {
         let toolbarButtons = document.getElementById('main_toolbar_buttons');
 
         // add the add button
@@ -101,6 +139,14 @@
 
             Dialog.appendDialogBox(_d('new_sct_subject', 'Settings'), undefined, NewSctSubject.settingsButtonHandlers, NewSctSubject.settingsView);
         });
+    }
+
+    function populateMainToolbar()
+    {
+        let mainToolbar = document.getElementById('main_toolbar');
+
+        populateLanguages();
+        createToolbarButtons();
     }
 
     function createNewQuestionButton()

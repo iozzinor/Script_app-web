@@ -14,18 +14,25 @@ TOOLBAR
     top: 0;
 }
 
-#sct_subject_status
+#sct_language_container
 {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    vertical-align: center;
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 5px;
+}
+
+#sct_subject_status
+{
+    margin: auto;
 }
 
 #main_toolbar_buttons
 {
     display: flex;
     justify-content: space-between;
-    margin-left: auto;
     vertical-align: center;
 }
 

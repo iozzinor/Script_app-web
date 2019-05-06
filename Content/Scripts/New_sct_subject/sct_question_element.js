@@ -477,6 +477,12 @@
             this.itemsContainer.appendChild(newItemElement.node);
             this.items.push(newItemElement);
 
+            // hide add item button
+            if (this.items.length > NewSctSubject.maxQuestionsItemsCount - 1)
+            {
+                this.addItemButton.style.visibility = 'hidden';
+            }
+
             NewSctSubject.updateSubjectStatus();
         }
 
@@ -493,6 +499,9 @@
             {
                 this.items[i].update(this.id, i + 1);
             }
+
+            // display add item button
+            this.addItemButton.style.visibility = 'visible';
 
             // hide delete button
             if (this.items.length < 2)
