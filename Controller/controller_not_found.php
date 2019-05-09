@@ -21,7 +21,7 @@
             $this->generate_view(
                 array(
                     'title'             => _d('not_found', 'title'),
-                    'navigation_links'  => ControllerSecure::get_navigation_links(),
+                    'navigation_menus'  => ControllerSecure::get_navigation_menus(),
                     'error_message'     => $error_message
                 ),
                 Router::get_base_path() . '/View/template.php'

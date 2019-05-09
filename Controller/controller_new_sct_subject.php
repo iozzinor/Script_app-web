@@ -49,7 +49,7 @@
             $this->generate_view(
                 array(
                     'title'                     => _d('new_sct_subject', 'title'),
-                    'navigation_links'          => ControllerSecure::get_navigation_links(),
+                    'navigation_menus'          => ControllerSecure::get_navigation_menus(),
                     'additional_resources'      => $this->additional_resources_,
                     'sct_information_script'    => $this->sct_information_script_,
                     'additional_scripts'        => $this->additional_scripts_

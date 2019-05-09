@@ -1,3 +1,22 @@
+main
+{
+    width: 100%;
+    padding: 0px;
+}
+
+main h1
+{
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#sct_form
+{
+    width: 80%;
+    margin: auto;
+}
+
 /*******************************************************************************
 TOOLBAR
 *******************************************************************************/
@@ -5,7 +24,10 @@ TOOLBAR
 {
     border-bottom: 1px solid gray;
     background: white;
-    width: 100%;
+    width: 80%;
+    padding-right: 10%;
+    padding-left: 10%;
+
     display: flex;
     justify-content: space-between;
     vertical-align: center;
@@ -241,11 +263,16 @@ ERRORS SECTION
 *******************************************************************************/
 #errors_section
 {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
     display: none;
 
     border-radius: 5px;
     border: 1px red solid;
-    margin-top: 20px;
     color: red;
 }
 

@@ -8,7 +8,7 @@
         {
             $view_information = array(
                 'title'                         => _d('home', "title"),
-                'navigation_links'              => ControllerSecure::get_navigation_links(),
+                'navigation_menus'              => ControllerSecure::get_navigation_menus(),
                 'display_new_sct_subject_link'  => Login::is_logged_in()
             );
         

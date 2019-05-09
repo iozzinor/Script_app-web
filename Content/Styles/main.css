@@ -3,6 +3,11 @@ VARIABLES
 *******************************************************************************/
 :root
 {
+    --menu-button-bg: lightgray;
+    --menu-button-hover-color: white;
+    --menu-button-hover-bg: black;
+    --dropdown-content-bg: lightgray;
+
     --hover-button-delete-border: red;
     --hover-button-delete-bg: rgb(237,201,201);
     --hover-button-default-border: blue;
@@ -34,7 +39,6 @@ header, footer
 {
     width: 90%;
     margin: auto;
-    padding: 5px;
     border-radius: 5px;
 }
 
@@ -47,36 +51,129 @@ header
     display: flex;
     justify-content: center;
     flex-direction: row;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
-header #main_navigation ul
+/*******************************************************************************
+MENUS
+*******************************************************************************/
+#main_navigation
 {
-    list-style: none;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
+    align-items: center;
 }
 
-header #main_navigation a
+.menu_fixed,.menu_dropdown
+{
+    display: inline-block;
+}
+
+.menu_fixed>button,.menu_dropdown>button
+{
+    font-size: 1em;
+    font-weight: bold;
+
+    background: var(--menu-button-bg);
+    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: none;
+}
+
+.menu_fixed>button>a,.menu_dropdown>button>a
+{
+    margin: 0px;
+    padding: 10px;
+}
+
+.menu_fixed:hover>button,.menu_dropdown:hover>button
+{
+    color: var(--menu-button-hover-color);
+    background-color: var(--menu-button-hover-bg);
+}
+
+.dropdown_content
+{
+    position: absolute;
+    display: none;
+    padding: 0px;
+}
+
+.dropdown_content .submenu h1
+{
+    margin: 0px;
+    padding-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 0.9em;
+    background: gray;
+    color: white;
+}
+
+.menu_dropdown:hover .dropdown_content
+{
+    display: flex;
+    background-color: var(--dropdown-content-bg);
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.menu_dropdown ul
+{
+    margin: 0px;
+    padding: 0px;
+    background-color: red;
+    width: 100%;
+}
+
+.menu_dropdown li
+{
+    padding-left:   20px;
+    padding-right:  20px;
+    padding-top:    10px;
+    padding-bottom: 10px;
+    background-color: lightgray;
+}
+
+.menu_dropdown li:hover
+{
+    background-color: gray;
+}
+
+.menu_dropdown .current_language
+{
+    color: gray;
+}
+
+.menu_dropdown .current_language:hover
+{
+    background-color: lightgray;
+}
+
+.menu_dropdown a
 {
     color: black;
     text-decoration: none;
-
-    border-radius: 5px;
-    padding: 5px;
-
-    margin-right: 10px;
 }
 
-header #main_navigation a:hover
-{
-    color: gray;
-    background: black;
-}
-
-header #site_language ul
+header ul
 {
     list-style: none;
+    padding: 0px;
+}
+
+header button a
+{
+    text-decoration: none;
+    color: black;
+}
+
+header button:hover a
+{
+    color: var(--menu-button-hover-color);
 }
 
 /*******************************************************************************
@@ -87,6 +184,7 @@ footer
     background: gray;
     color: white;
     font-size: 0.8em;
+    padding: 5px;
 }
 
 /*******************************************************************************

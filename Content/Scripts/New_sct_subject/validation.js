@@ -164,12 +164,22 @@
     };
 
     // -------------------------------------------------------------------------
+    // SEND STATE
+    // -------------------------------------------------------------------------
+    let SendState = {
+        NONE:       0,
+        ERROR:      1,
+        SENT:       2,
+        SENDING:    4,
+        ABORTED:    8
+    };
+
+    // -------------------------------------------------------------------------
     // SEND
     // -------------------------------------------------------------------------
     function createSendProgressStatus()
     {
         let status = document.createElement('p');
-        status.innerHTML = _d('new_sct_subject', 'The SCT is being sent...');
         return status;
     }
 
@@ -205,10 +215,8 @@
         return element;
     }
 
-    function getFormData()
+    function getLanguage()
     {
-        let formData = new FormData();
-
         let language = 'en';
         for (var i = 0; i < NewSctSubject.sctLanguages.length; ++i)
         {
@@ -218,7 +226,14 @@
                 break;
             }
         }
-        formData.append('language', language);
+        return language;
+    }
+
+    function getFormData()
+    {
+        let formData = new FormData();
+
+        formData.append('language', getLanguage());
 
         formData.append('questions_count', NewSctSubject.questions.length);
 
@@ -299,28 +314,41 @@
     }
 
     NewSctSubject.sendSubject = function() {
+        // reset the progress status
+        progressElement.progressStatus.innerHTML = _d('new_sct_subject', 'The SCT is being sent...');
+
         // reset the progress bar
         progressElement.progressBar.setProgress(0);
         progressElement.progressBar.container.style.visibility = 'visible';
+
+        // reset the alert box button
+        Dialog.updateTitle(0, _('Cancel'));
 
         // get the form
         let formData = getFormData();
         
         // make the request
+        sendState = SendState.SENDING;
         sendRequest = new XMLHttpRequest();
         sendRequest.onloadend = function() {
+            if (sendState == SendState.ABORTED)
+            {
+                return;
+            }
+
             if (this.status != 200)
             {
-                progressElement.progressStatus.innerHTML = "An error occured.<br />" + this.responseText;
+                progressElement.progressStatus.innerHTML = _d('new_sct_subject', 'An error occured.');
                 progressElement.progressBar.container.style.visibility = 'hidden';
-                Dialog.updateTitle(0, 'Retry');
+                Dialog.updateTitle(0, _d('new_sct_subject', 'Retry'));
+                sendState = SendState.ERROR;
             }
             else
             {
-                progressElement.progressStatus.innerHTML = 'Sent!';
+                progressElement.progressStatus.innerHTML = _d('new_sct_subject', 'The SCT has been sent!');
                 Dialog.updateTitle(0, _('Ok'));
+                sendState = SendState.SENT;
             }
-            console.log(this.responseText);
         };
         sendRequest.onprogress = function (event) {
             let percentComplete = event.loaded / event.total * 100;
@@ -332,18 +360,46 @@
         let cancelButtonHandler = new Dialog.ButtonHandler(
             createHoverableButton.bind(null, null, _('Cancel'), 'var(--hover-button-cancel-border)', 'var(--hover-button-cancel-bg)'),
             function () {
-                sendRequest.abort();
-                return true;
+                switch (sendState)
+                {
+                case SendState.SENDING:
+                    sendRequest.abort();
+                    sendState = SendState.ABORTED;
+                    dialogOpened = false;
+                    return true;
+
+                case SendState.SENT:
+                    dialogOpened = false;
+                    // redirect to the home page
+                    window.location.replace('/' + getLanguage() + '/home');
+
+                    return true;
+
+                case SendState.ERROR:
+                    NewSctSubject.sendSubject();
+                    return false;
+
+                default:
+                    break;
+                }
+
+                return false;
             });
 
         // display the dialog box
-        Dialog.appendDialogBox(
-            _d('new_sct_subject', 'Sending the SCT'),
-            null,
-            [cancelButtonHandler],
-            progressElement.progressView);
+        if (!dialogOpened)
+        {
+            dialogOpened = true;
+            Dialog.appendDialogBox(
+                _d('new_sct_subject', 'Sending the SCT'),
+                null,
+                [cancelButtonHandler],
+                progressElement.progressView);
+        }
     };
 
     let progressElement = createSendProgressElement();
     let sendRequest = new XMLHttpRequest();
+    let sendState = SendState.NONE;
+    let dialogOpened = false;
 })(window.NewSctSubject = window.NewSctSubject || {});

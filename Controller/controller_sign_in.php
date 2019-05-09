@@ -14,7 +14,7 @@
 
             $this->generate_view(array(
                 'title'                 => _d('sign_in', 'title'),
-                'navigation_links'      => ControllerSecure::get_navigation_links(),
+                'navigation_menus'      => ControllerSecure::get_navigation_menus(),
                 'additional_resources'  => $additional_resources,
                 'additional_scripts'    => $additional_scripts
                 ), 

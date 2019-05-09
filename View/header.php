@@ -1,44 +1,93 @@
 <header>
     <nav id="main_navigation">
-        <ul>
-            <?php
-                if (isset($navigation_links))
+        <?php
+            // display menus
+            function display_fixed_menu($menu)
+            {
+                $item = $menu->get_items()[0];
+                print('<div class="menu_fixed">');
+                print('<button class="menu_title"><a href="' . $item->get_link() . '">' . $item->get_title() . '</a></button>');
+                print('</div>');
+            }
+
+            function display_multilevel_menu($menu)
+            {
+                $submenus = $menu->get_items();
+
+                print('<div class="menu_dropdown">');
+                print('<button class="menu_title">' . $menu->get_title() . '</button>');
+                print('<div class="dropdown_content">');
+
+                $submenus_count = count($submenus);
+                for ($i = 0; $i < $submenus_count; ++$i)
                 {
-                    foreach ($navigation_links as $navigation_link)
-                    {
-                        print('<li><a href="' . $navigation_link['href'] . '">' . $navigation_link['name'] . '</a></li>');
-                    }
-                }
-            ?>
-        </ul>
-    </nav>
-    <nav id="site_language">
-        <p><?= _('Choose Language'); ?></p>
-        <ul>
-            <?php
-                function compare_languages($a, $b)
-                {
-                    return strcmp($a->get_full_name(), $b->get_full_name());
+                    $submenu = $submenus[$i];
+
+                    print('<div class="submenu">');
+                    print('<h1>' . $submenu->get_title() . '</h1>');
+                    display_menu($submenu, false);
+                    print('</div>');
                 }
 
-                $base_url = Router::get_raw_base_url();
-                $current_language = WebLanguage::get_current_language()->get_short_name();
-                $query = Router::get_query();
-                $web_languages = WebLanguage::get_supported_languages();
-                usort($web_languages, compare_languages);
+                print('</div>');
+                print('</div>');
+            }
 
-                foreach ($web_languages as $supported_language)
+            function display_menu($menu, $embbed_in_menu_dropdown = true)
+            {
+                $items = $menu->get_items();
+
+                if ($embbed_in_menu_dropdown)
                 {
-                    if ($supported_language->get_short_name() == $current_language)
+                    print('<div class="menu_dropdown">');
+                    print('<button class="menu_title">' . $menu->get_title() . '</button>');
+
+                    print('<div class="dropdown_content">');
+                }
+
+                print('<ul>');
+                $items_count = count($items);
+                for ($i = 0; $i < $items_count; ++$i)
+                {
+                    $item = $items[$i];
+                    $link = $item->get_link();
+                    if ($link != null)
                     {
-                        print('<li>' . $supported_language->get_full_name() . '</li>');
+                        print('<li><a href="' . $link . '">' . $item->get_title() . '</a></li>');
                     }
                     else
                     {
-                        print('<li><a href="' . $base_url . $supported_language->get_short_name() . '/' . $query . '">' . $supported_language->get_full_name() . '</a></li>');
+                        print('<li class="current_language">' . $item->get_title() . '</li>');
                     }
                 }
-            ?>
-        </ul>
+                print('</ul>');
+
+                if ($embbed_in_menu_dropdown)
+                {
+                    print('</div>');
+
+                    print('</div>');
+                }
+            }
+
+            if (isset($navigation_menus))
+            {
+                foreach ($navigation_menus as $navigation_menu)
+                {
+                    if ($navigation_menu->is_fixed())
+                    {
+                        display_fixed_menu($navigation_menu);
+                    }
+                    else if ($navigation_menu->is_multilevel())
+                    {
+                        display_multilevel_menu($navigation_menu);
+                    }
+                    else
+                    {
+                        display_menu($navigation_menu);
+                    }
+                }
+            }
+        ?>
     </nav>
 </header>

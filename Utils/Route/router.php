@@ -115,8 +115,10 @@
 		{
 			WebLanguage::load_domains(array(
 				'common',
+				'navigation',
 				'not_found',
 				'home',
+				'about',
 				'login',
 				'sign_in',
 				'new_sct_subject',

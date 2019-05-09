@@ -46,7 +46,7 @@
 
             $view_information = array(
                 'title'                 => _d('login', 'title'),
-                'navigation_links'      => ControllerSecure::get_navigation_links(),
+                'navigation_menus'      => ControllerSecure::get_navigation_menus(),
                 'username'              => '',
                 'password'              => '',
                 'attempts'              => $attempts,
