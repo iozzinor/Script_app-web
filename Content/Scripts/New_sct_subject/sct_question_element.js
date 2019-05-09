@@ -126,7 +126,7 @@
         // on change listener
         sctTypesSelect.addEventListener('change', function(event) {
             var questionId = parseInt(event.target.id.replace('sct_type_', ''));
-            NewSctSubject.questions[questionId - 1].typeId = event.target.value;
+            NewSctSubject.questions[questionId - 1].typeId = parseInt(event.target.value);
         });
 
         return sctTypesSelect;

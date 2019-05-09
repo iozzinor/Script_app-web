@@ -125,7 +125,8 @@
             }
             else
             {
-                $_SESSION['username'] = $username;
+                $_SESSION['username']   = $username;
+                $_SESSION['user_id']    = $user_id;
 
                 // load preferences
                 $this->load_preferences_($user_id);

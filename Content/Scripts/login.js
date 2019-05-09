@@ -48,7 +48,8 @@
             }
         };
 
-        request.open('POST', '/en/login/perform', true);
+        let language = window.location.href.match(/[^:]+[:][/]{2}[^/]+[/]([^/]+)/)[1];
+        request.open('POST', '/' + language+ '/login/perform', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         request.send('username=' + username + '&password=' + password);
     }

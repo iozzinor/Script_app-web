@@ -1,6 +1,11 @@
 <?php
     abstract class SctFileManager
     {
+        public function get_scts_folder_path()
+        {
+            return Router::get_base_path() . '/Files/Sct';
+        }
+
         /**
          * The sct id. 
          */
@@ -28,7 +33,7 @@
             $this->sct_id_      = $sct_id;
             $this->file_name_   = $file_name;
 
-            $this->sct_folder_path_ = Configuration::get('root_path') . 'Files/Sct/Sct_' . $sct_id;
+            $this->sct_folder_path_ = SctFileManager::get_scts_folder_path() . '/Sct_' . $sct_id;
             $this->file_path_       = $this->sct_folder_path_ . '/'. $file_name . '.sct';
         }
 

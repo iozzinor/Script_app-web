@@ -160,6 +160,7 @@
                 }
             }
             this.node.appendChild(buttonsContainer);
+            this.buttonsContainer = buttonsContainer;
 
             document.body.appendChild(this.node);
             center(this.node, this.minimumWidth, this.minimumHeight);
@@ -211,6 +212,23 @@
         var newDialogBox = new DialogBox(title, message, buttonHandlers, content, minimumWidth, minimumHeight);
 
         boxes.push(newDialogBox);
+    };
+
+    // -------------------------------------------------------------------------
+    // UPDATE TITLE
+    // -------------------------------------------------------------------------
+    Dialog.updateTitle = function(buttonIndex, newTitle) {
+        if (boxes.length < 1 || buttonIndex < 0)
+        {
+            return;
+        }
+
+        let dialog = boxes[boxes.length - 1];
+        if (buttonIndex > dialog.buttonsContainer.children.length - 1)
+        {
+            return;
+        }
+        dialog.buttonsContainer.children[buttonIndex].value = newTitle;
     };
 
     let boxes = [];

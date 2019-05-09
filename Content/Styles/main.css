@@ -15,6 +15,9 @@ VARIABLES
     --disable-button-bg: lightgray;
     --disable-button-border: black;
     --disable-button-color: gray;
+
+    --progress-bar-progress: black;
+    --progress-bar-remaining: gray;
 }
 
 /*******************************************************************************

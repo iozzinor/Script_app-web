@@ -74,14 +74,13 @@
 
                 item.newData.associatedData = associatedData;
                 item.newData.dataType = itemElement.currentDataType;
-
-                this.cachedData = associatedData;
             });
         }
 
         updateId(itemInformation)
         {
             this.node.id = createId('data_' + this.idName, itemInformation);
+            this.node.name = this.node.id;
         }
 
         updateItem(dataType)
@@ -235,7 +234,7 @@
 
     function createItemNode(itemElement, questionNumber, itemNumber)
     {
-        var itemNode = document.createElement('div');
+        let itemNode = document.createElement('div');
         itemNode.id = "sct_item_" + questionNumber + '_' + itemNumber;
         itemNode.className = "sct_item";
 
@@ -270,12 +269,10 @@
         // set the current data handler to text handler
         itemElement.dataHandlers = createDataHandlers();
         var textHandler = itemElement.dataHandlers.text;
-        itemElement.currentDataTypeName = 'text';
+        itemElement.currentDataType = SctDataType.types[0];
+        itemElement.currentDataTypeName = itemElement.currentDataType.nameCode.toLowerCase();
         itemElement.dataParent.appendChild(textHandler.node);
         itemElement.currentDataHandler = textHandler;
-
-        // ids
-        itemElement.setIds(questionNumber, itemNumber);
 
         return itemNode;
     }
@@ -286,6 +283,7 @@
             this.questionNumber = questionId;
             this.itemNumber = itemNumber;
             this.node = createItemNode(this, questionId, itemNumber);
+            this.setIds(questionId, itemNumber);
         }
 
         // -----------------------------------------------------------------
@@ -318,6 +316,7 @@
                 question: questionNumber,
                 item: itemNumber
             };
+            this.node.id = 'sct_item_' + questionNumber + '_' + itemNumber;
             this.deleteButton.id     = createId('delete', itemIdentification);
             this.hypothesisField.id  = createId('hypothesis', itemIdentification);
             this.dataTypeSelect.id   = createId('type_select', itemIdentification);
@@ -331,6 +330,10 @@
                     this.dataHandlers[currentType.nameCode.toLowerCase()].updateId(itemIdentification);
                 }
             }
+
+            // names
+            this.hypothesisField.name   = this.hypothesisField.id;
+            this.dataTypeSelect.name    = this.dataTypeSelect.id;
         }
 
         setDataType(dataType)

@@ -1,41 +1,34 @@
 <?php
     require_once 'sct_subject.php';
     require_once 'sfm_subject.php';
+    require_once 'sfm_language.php';
 
     class Sct
     {
-        /**
-         * The user id that should be specified to retrieve SCT information.
-         */
-        private $user_id_ = null;
-
-        /**
-         * The identifier of the published SCT state.
-         */
-        private $published_state_id_ = null;
-
-        public function __construct()
+        // ---------------------------------------------------------------------
+        // SAVE SCT
+        // ---------------------------------------------------------------------
+        public function save_sct_subject($sct_subject, $is_new = false)
         {
-            $this->retrieve_published_state_id_();
-        }
-
-        private function retrieve_published_state_id_()
-        {
-            /*$sql_result = $this->execute_request('SELECT id from sct_state WHERE name=:name', array(':name' => 'PUBLISHED'));
-            if ($result = $sql_result->fetchArray(SQLITE3_ASSOC))
+            if ($is_new)
             {
-                $this->published_state_id_ = $result['id'];
-            }*/
-            $this->published_state_id_ = -1;
-        }
+                $sct_subject->set_id($this->get_new_sct_id());
+            }
 
-        /**
-         * This function must be called before fetching scts.
-         * Otherwise, scts function will return null.
-         */
-        public function set_user_id($user_id)
-        {
-            $this->user_id_ = $user_id;
+            $sfm_subject = new SfmSubject($sct_subject);
+            $sfm_subject->write_file();
+
+            $language_names = $sct_subject->get_language_names();
+            $i = 0;
+            $language_names_count = count($language_names);
+            for ($i = 0; $i < $language_names_count; ++$i)
+            {
+                $language_name = $language_names[$i];
+                $questions = $sct_subject->get_questions($language_name);
+
+                $sfm_language = new SfmLanguage($sct_subject->get_id(), $language_name, $questions);
+                $sfm_language->write_file();
+            }
         }
 
         // ---------------------------------------------------------------------
@@ -46,13 +39,27 @@
          */
         public function get_scts_count()
         {
-            $sql_result = $this->execute_request('SELECT count(id) AS scts_count FROM sct');
+            $folder_path = SctFileManager::get_scts_folder_path();
 
-            if ($result = $sql_result->fetchArray(SQLITE3_ASSOC))
+            $result = 0;
+            $content = scandir($folder_path);
+            foreach ($content as $current_file)
             {
-                return $result['scts_count'];
+                if (strncmp($current_file, 'Sct_', 4) == 0)
+                {
+                    ++$result;
+                }
             }
-            return -1;
+
+            return $result;
+        }
+
+        /**
+         * @return int The id of a new SCT.
+         */
+        public function get_new_sct_id()
+        {
+            return $this->get_scts_count() + 1;
         }
 
         /**
