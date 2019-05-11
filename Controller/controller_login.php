@@ -90,6 +90,7 @@
                 $_SESSION['lang'] = $preferences->get_language_short_name();
                 print($preferences->get_language_short_name());
             }
+            return $preferences;
         }
 
         public function perform()
@@ -129,7 +130,10 @@
                 $_SESSION['user_id']    = $user_id;
 
                 // load preferences
-                $this->load_preferences_($user_id);
+                $privileges = $this->user_->load_privileges($user_id);
+                $_SESSION['user_preferences']       = serialize($this->load_preferences_($user_id));
+                $_SESSION['user_privileges']        = serialize($privileges);
+                $_SESSION['user_privileges_mask']   = Login::get_rank_mask($privileges);
 
                 http_response_code(200);
             }

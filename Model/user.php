@@ -1,5 +1,6 @@
 <?php
     require_once 'user_preferences.php';
+    require_once 'user_privilege.php';
 
     class User
     {
@@ -51,6 +52,59 @@
                 return new UserPreferences($language_short_name);
             }
             return null;
+        }
+
+        // ---------------------------------------------------------------------
+        // PRIVILEGES
+        // ---------------------------------------------------------------------
+        /**
+         * @return array(UserPrivilege) The user privileges.
+         */
+        public function load_privileges($user_id)
+        {
+            $privileges = array();
+            $topics = array();
+
+            $query = 'SELECT privilege_type.name AS name, privilege.sct_topic_id AS topic_id FROM privilege_type INNER JOIN privilege
+                        ON privilege_type.id = privilege.privilege_type_id WHERE privilege.user_id = :user_id;';
+            $statement = DatabaseHandler::database()->prepare($query);
+            $statement->execute(array(':user_id' => $user_id));
+
+            // get all topics
+            while ($sql_result = $statement->fetch(PDO::FETCH_ASSOC))
+            {
+                $privilege_name     = $sql_result['name'];
+                $privilege_topic    = $sql_result['topic_id'];
+                
+                if (!isset($topics[$privilege_name]))
+                {
+                    $topics[$privilege_name] = array();
+                }                
+                if (isset($privilege_topic))
+                {
+                    array_push($topics[$privilege_name], $privilege_topic);
+                }
+            }
+
+            // make privileges objects
+            foreach ($topics as $name => $associated_topics)
+            {
+                $new_privilege = new UserPrivilege($name, $associated_topics);
+                array_push($privileges, $new_privilege);
+            }
+
+            return $privileges;
+        }
+
+        public function get_all_privilege_types()
+        {
+            $result = array();
+            $sql_result = DatabaseHandler::database()->query('SELECT id, name FROM privilege_type;');
+            while ($current_result = $sql_result->fetch(PDO::FETCH_ASSOC))
+            {
+                array_push($result, $current_result);
+            }
+            return $result;
         }
 
         // ---------------------------------------------------------------------

@@ -157,7 +157,7 @@
 
     function createHypothesisField()
     {
-        var hypothesisField = document.createElement('input');
+        var hypothesisField = document.createElement('textarea');
 
         hypothesisField.placeholder = _d('new_sct_subject', 'The Hypothesis...');
         hypothesisField.addEventListener('input', function (event) {

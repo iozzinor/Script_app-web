@@ -19,4 +19,9 @@
             <input type="password" placeholder="<?=_d('sign_in', 'The password confirmation...') ?>" />
         </div>
     </div>
+
+    <div class="sign_in_section">
+        <p class="sign_in_section_caption">Privileges</p>
+        <button id="add_privilege">Add privilege<button>
+    </div>
 </form>

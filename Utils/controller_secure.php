@@ -25,6 +25,38 @@
             parent::execute_action($name);
         }
 
+        // ---------------------------------------------------------------------
+        // MENUS
+        // ---------------------------------------------------------------------
+        private static function get_sct_navigation_menu_()
+        {
+            $sct_submenus = array();
+
+            // browsing
+            $sct_browsing_items = array();
+            array_push($sct_browsing_items, new NavigationMenuItem(_d('navigation', 'New'), Router::get_base_url() . 'new'));
+            array_push($sct_browsing_items, new NavigationMenuItem(_d('navigation', 'Top'), Router::get_base_url() . 'top'));
+            $sct_browsing_menu = new NavigationMenu(_d('navigation', 'Browsing'), $sct_browsing_items);
+            
+            array_push($sct_submenus, $sct_browsing_menu);
+
+            // creation
+            if (Login::has_higher_privilege(UserPrivilege::$EXPERT))
+            {
+                $sct_creation_items = array();
+                array_push($sct_creation_items, new NavigationMenuItem(_d('navigation', 'Create New Subject'), Router::get_base_url() . 'new_sct_subject'));
+                array_push($sct_creation_items, new NavigationMenuItem(_d('navigation', 'Follow My Tests'), Router::get_base_url() . 'follow_sct_subject/all'));
+                array_push($sct_creation_items, new NavigationMenuItem(_d('navigation', 'Correct'), Router::get_base_url() . 'correct_sct_subject'));
+                $sct_creation_menu = new NavigationMenu(_d('navigation', 'Creation'), $sct_creation_items);
+    
+                array_push($sct_submenus, $sct_creation_menu);
+            }
+
+            $sct_menu = new NavigationMenu(_d('navigation', 'SCT'), $sct_submenus);
+
+            return $sct_menu;
+        }
+
         /**
          * @return array The menus that should be displayed in the navigation header.
          */
@@ -41,23 +73,8 @@
             if (Login::is_logged_in())
             {
                 // sct
-                $sct_browsing_items = array();
-                array_push($sct_browsing_items, new NavigationMenuItem(_d('navigation', 'New'), Router::get_base_url() . 'new'));
-                array_push($sct_browsing_items, new NavigationMenuItem(_d('navigation', 'Top'), Router::get_base_url() . 'top'));
-                $sct_browsing_menu = new NavigationMenu(_d('navigation', 'Browsing'), $sct_browsing_items);
-                
-                $sct_creation_items = array();
-                array_push($sct_creation_items, new NavigationMenuItem(_d('navigation', 'Create New Subject'), Router::get_base_url() . 'new_sct_subject'));
-                array_push($sct_creation_items, new NavigationMenuItem(_d('navigation', 'Follow My Tests'), Router::get_base_url() . 'follow_sct_subject/all'));
-                array_push($sct_creation_items, new NavigationMenuItem(_d('navigation', 'Correct'), Router::get_base_url() . 'correct_sct_subject'));
-                $sct_creation_menu = new NavigationMenu(_d('navigation', 'Creation'), $sct_creation_items);
-
-                $sct_submenus = array();
-                array_push($sct_submenus, $sct_browsing_menu);
-                array_push($sct_submenus, $sct_creation_menu);
-
-                $sct_menu = new NavigationMenu(_d('navigation', 'SCT'), $sct_submenus);
-                array_push($menus, $sct_menu);
+                $sct_menu = self::get_sct_navigation_menu_();
+               array_push($menus, $sct_menu);
 
                 // profil
                 $profil_items = array();
