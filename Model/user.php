@@ -136,17 +136,16 @@
         /**
          * @return bool Whether the username is already in use.
          */
-        private function is_username_in_use_(string $username)
+        public function is_username_in_use(string $username)
         {
-            $sql_result = $this->execute_request('SELECT count(id) AS users_count FROM user WHERE username=:username',
-                array(':username' => $username));
-            if ($result = $sql_result->fetchArray(SQLITE3_ASSOC))
+            $statement = DatabaseHandler::database()->prepare('SELECT count(*) AS users_count FROM user WHERE username LIKE :username');
+            $statement->execute(array(':username' => $username));
+            if (!($result = $statement->fetch(PDO::FETCH_ASSOC)))
             {
-                $users_count = $result['users_count'];
-
-                return $users_count > 0;
+                return false;
             }
-            return false;
+
+            return $result['users_count'] > 0;
         }
 
         /**

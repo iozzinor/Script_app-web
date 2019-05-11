@@ -22,7 +22,7 @@ SECTION
 }
 
 /*******************************************************************************
-ROW
+SIGN IN ROW
 *******************************************************************************/
 .sign_in_row
 {
@@ -40,6 +40,31 @@ ROW
 .sign_in_row label,input,.password_label_container
 {
     width: 100%;
+}
+
+
+/*******************************************************************************
+ERROR SECTION
+*******************************************************************************/
+.error_section
+{
+    margin-top: 10px;
+    border-top: red 1px solid;
+}
+
+.error_status
+{
+    color: red;
+}
+
+.error_input
+{
+    border-color: red;
+}
+
+.error_input::placeholder
+{
+    color: red;
 }
 
 /*******************************************************************************
@@ -64,6 +89,11 @@ INFORMATION BUTTON
 .information_button
 {
     display: inline-block;
+}
+
+.information_button:hover
+{
+    color: white;
 }
 
 .sign_in_row:hover .information_button

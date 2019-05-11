@@ -23,6 +23,9 @@ VARIABLES
 
     --progress-bar-progress: black;
     --progress-bar-remaining: gray;
+
+    --information-button-bg: white;
+    --information-button-border: blue;
 }
 
 /*******************************************************************************

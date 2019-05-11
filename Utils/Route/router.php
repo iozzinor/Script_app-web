@@ -123,7 +123,8 @@
 				'sign_in',
 				'new_sct_subject',
 				'sct_types',
-				'sct_topics'
+				'sct_topics',
+				'privilege_types'
 				)
 			);
 			$actual_lang = WebLanguage::set_language($lang);

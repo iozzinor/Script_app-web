@@ -1,0 +1,1 @@
+<p><?= _d('sign_in', 'Your account has successfully been created!') ?></p>

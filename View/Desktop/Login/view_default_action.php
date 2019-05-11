@@ -29,7 +29,7 @@
         ?>
     </form>
     <?php
-        $signin_link = '<a href="' . Router::get_base_url() . 'sign_in">' . _d('login', 'signin') . '</a>';
+        $signin_link = '<a href="' . Router::get_base_url() . 'sign_in">' . _d('login', 'Sign In') . '</a>';
         print('<p>');
         printf(_d('login', 'No account ? %s!'), $signin_link);
         print('</p>');

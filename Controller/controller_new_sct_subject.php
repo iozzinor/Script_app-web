@@ -1,6 +1,7 @@
 <?php
     require_once(Router::get_base_path() . '/Model/sct.php');
     require_once(Router::get_base_path() . '/Model/language.php');
+    require_once(Router::get_base_path() . '/Utils/javascript_generator.php');
 
     class ControllerNewSctSubject extends ControllerSecure
     {
@@ -215,43 +216,24 @@
             $language = new Language();
             $sct_languages = $language->get_all_languages();
 
-            // open script
-            $script = '<script>';
-            // open namespace
-            $script .= '(function(NewSctSubject){';
-
             // sct types
-            $script .= 'NewSctSubject.sctTypes = [];';
-            foreach ($sct_types as $sct_type)
-            {
-                $sct_type_name = _d('sct_types', $sct_type['name']);
-                $new_type = '{id:"' . $sct_type['id'] . '",name:"' . $sct_type_name . '",identifier:"' . $sct_type['name'] . '"}';
-
-                $script .= 'NewSctSubject.sctTypes.push(' . $new_type . ');';
-            }
+            $script_content .= JavascriptGenerator::create_array('NewSctSubject', 'sctTypes', $sct_types, ['JavascriptGenerator', 'create_sct_type']);
 
             // sct topics
-            $script .= 'NewSctSubject.sctTopics = [];';
-            foreach ($sct_topics as $sct_topic)
-            {
-                $sct_topic_name = _d('sct_topics', $sct_topic['name']);
-                $new_topic = '{id:"' . $sct_topic['id'] . '",identifier:"' . $sct_topic['name'] . '",name:"' . $sct_topic_name . '"}';
-
-                $script .= 'NewSctSubject.sctTopics.push(' . $new_topic . ');';
-            }
+            $script_content .= JavascriptGenerator::create_array('NewSctSubject', 'sctTopics', $sct_topics, ['JavascriptGenerator', 'create_sct_topic']);
 
             // sct languages
-            $script .= 'NewSctSubject.sctLanguages = [];';
+            $script_content .= 'NewSctSubject.sctLanguages = [];';
             foreach ($sct_languages as $sct_language)
             {
                 $new_language = '{id:' . $sct_language->id . ',name:"' . $sct_language->name . '",shortName:"' . $sct_language->short_name. '"}';
 
-                $script .= 'NewSctSubject.sctLanguages.push(' . $new_language . ');';
+                $script_content .= 'NewSctSubject.sctLanguages.push(' . $new_language . ');';
             }
 
-            $script .= '})(window.NewSctSubject=window.NewSctSubject||{});'; // close namespace
-            $script .= '</script>'; // close script
-            return $script;
+            $script = JavascriptGenerator::generate_namespace('NewSctSubject', $script_content);
+
+            return JavascriptGenerator::enclose_in_script_tags($script);
         }
     }
 ?>

@@ -15,6 +15,22 @@
             element.appendChild(children[i]);
         }
     }
+
+    Main.findParentMatching = function(element, matchFunction) {
+        if (element == null)
+        {
+            return null;
+        }
+        while (element.parentNode != null)
+        {
+            element = element.parentNode;
+            if (matchFunction(element))
+            {
+                return element;
+            }
+        }
+        return null;
+    };
     
     // -------------------------------------------------------------------------
     // DOM POSITION
@@ -108,6 +124,19 @@
         }
 
         return result;
+    };
+
+    // -------------------------------------------------------------------------
+    // GET CURRENT LANGUAGE
+    // -------------------------------------------------------------------------
+    Main.getCurrentLanguage = function() {
+        let language = 'en';
+        let match = window.location.href.match(/[^:]+[:][/]{2}[^/]+[/]([^/]+)/);
+        if (match != null && match.length > 1)
+        {
+            language = match[1];
+        }
+        return language;
     };
 })(window.Main = window.Main || {});
 
