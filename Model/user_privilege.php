@@ -5,17 +5,24 @@
         public static $EXPERT   = 2;
         public static $STUDENT  = 1;
 
-        private static $ranks_;
+        private static $rank_parameters_;
 
-        private static function initialize_ranks_()
+        private static function add_rank_parameter_(string $name, int $rank, bool $needs_associated_topics)
         {
-            if (self::$ranks_ == null)
+            self::$rank_parameters_[$name] = array(
+                'rank'                      => $rank,
+                'needs_associated_topics'   => $needs_associated_topics
+            );
+        }
+
+        private static function initialize_rank_parameters_()
+        {
+            if (self::$rank_parameters_ == null)
             {
-                self::$ranks_ = array(
-                    'teacher'   => self::$TEACHER,
-                    'expert'    => self::$EXPERT,
-                    'student'   => self::$STUDENT
-                );
+                self::$rank_parameters_ = array();
+                self::add_rank_parameter_('teacher',    self::$TEACHER, true);
+                self::add_rank_parameter_('expert',     self::$EXPERT, true);
+                self::add_rank_parameter_('student',    self::$STUDENT, false);
             }
         }
 
@@ -44,13 +51,13 @@
 
         public function get_rank()
         {
-            self::initialize_ranks_();
+            self::initialize_rank_parameters_();
 
-            if (!array_key_exists($this->name_, self::$ranks_))
+            if (!array_key_exists(strtolower($this->name_), self::$rank_parameters_))
             {
                 return -1;
             }
-            return self::$ranks_[$this->name_];
+            return self::$rank_parameters_[strtolower($this->name_)]['rank'];
         }
     }
 ?>

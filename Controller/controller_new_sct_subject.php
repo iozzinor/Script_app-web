@@ -42,6 +42,11 @@
             array_push($this->additional_scripts_, array('src' => "/Content/Scripts/New_sct_subject/main.js"));
         }
 
+        protected function is_user_allowed($action)
+        {
+            return Login::has_higher_privilege(UserPrivilege::$EXPERT);
+        }
+
         // ---------------------------------------------------------------------
         // DEFAULT ACTION
         // ---------------------------------------------------------------------

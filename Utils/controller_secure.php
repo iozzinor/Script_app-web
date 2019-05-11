@@ -17,13 +17,23 @@
         public function execute_action(string $name)
         {
             // redirect the user to the login page if he/she is not connected yet
-            if (!Login::is_logged_in())
+            if (!Login::is_logged_in() || !$this->is_user_allowed($name))
             {
                 header('Location: ' . Router::get_base_url() . 'login?try_to_forward_to=' . Router::get_query());
                 exit;
             }
             parent::execute_action($name);
         }
+
+        // ---------------------------------------------------------------------
+        // PRIVILEGE
+        // ---------------------------------------------------------------------
+        /**
+         * @param string $action The action requested by the user.
+         * 
+         * @return bool Whether the user can access the current page.
+         */
+        abstract protected function is_user_allowed(string $action);
 
         // ---------------------------------------------------------------------
         // MENUS

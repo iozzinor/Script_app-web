@@ -15,5 +15,10 @@
             header('Location: ' . Router::get_base_url() . 'home');
             exit;
         }
+
+        protected function is_user_allowed(string $action)
+        {
+            return true;
+        }
     }
 ?>
