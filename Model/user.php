@@ -64,9 +64,13 @@
         {
             $privileges = array();
             $topics = array();
-
-            $query = 'SELECT privilege_type.name AS name, privilege.sct_topic_id AS topic_id FROM privilege_type INNER JOIN privilege
-                        ON privilege_type.id = privilege.privilege_type_id WHERE privilege.user_id = :user_id;';
+            
+            $query =   'SELECT query.name,query.topic_id FROM (';
+            $query .=  '    SELECT privilege_type.name AS name, privilege.sct_topic_id AS topic_id, privilege.privilege_state_id AS privilege_state_id';
+            $query .=  '    FROM privilege_type INNER JOIN privilege';
+            $query .=  '        ON privilege_type.id = privilege.privilege_type_id WHERE privilege.user_id = :user_id';
+            $query .=  '    ) AS query';
+            $query .=  ' INNER JOIN privilege_state ON privilege_state.id = query.privilege_state_id WHERE privilege_state.name LIKE "GRANTED"';
             $statement = DatabaseHandler::database()->prepare($query);
             $statement->execute(array(':user_id' => $user_id));
 
@@ -91,6 +95,11 @@
             {
                 $new_privilege = new UserPrivilege($name, $associated_topics);
                 array_push($privileges, $new_privilege);
+            }
+            // student by default
+            if (count($privileges) == 0)
+            {
+                array_push($privileges, new UserPrivilege('student'));
             }
 
             return $privileges;

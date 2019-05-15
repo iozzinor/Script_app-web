@@ -253,6 +253,21 @@ DIALOG
     justify-content: space-around;
 }
 
+/*******************************************************************************
+BANNER
+*******************************************************************************/
+.top_banner
+{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 10px;
+    background: rgba(100, 100, 100, 0.95);
+
+    border-bottom: solid black 1px;
+}
+
 @media (prefers-color-scheme: dark) {
     :root
     {

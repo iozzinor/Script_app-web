@@ -88,7 +88,9 @@
 
                 // profil
                 $profil_items = array();
+                array_push($profil_items, new NavigationMenuItem(_d('navigation', 'Settings'), Router::get_base_url() . 'settings'));
                 array_push($profil_items, new NavigationMenuItem(_d('navigation', 'Privileges'), Router::get_base_url() . 'privileges'));
+                array_push($profil_items, new NavigationMenuItem(_d('navigation', 'Upgrade Privileges'), Router::get_base_url() . 'privileges/upgrade'));
                 array_push($profil_items, new NavigationMenuItem(_d('navigation', 'Logout'), Router::get_base_url() . 'logout'));
                 $profil_menu = new NavigationMenu(_d('navigation', 'Profil'), $profil_items);
                 array_push($menus, $profil_menu);

@@ -1,6 +1,6 @@
 (function(SignIn) {
     // -------------------------------------------------------------------------
-    // PASSWORD INFORMATION
+    // SETUP
     // -------------------------------------------------------------------------
     SignIn.usernameMinLength = 2;
     SignIn.usernameMaxLength = 128;
@@ -41,10 +41,25 @@
         return signInButton;
     }
 
-    function setupChoosePrivilegesButton()
+    function setupWrongAccountActivationCodeBanner()
     {
-        let privilegesButton = document.getElementById('choose_privileges');
-        createHoverableButton(privilegesButton, '', 'var(--hover-button-default-border)', 'var(--hover-button-default-bg)');
+        if (SignIn.wrongAccountActivationCode)
+        {
+            Banner.appendTopBanner('Prefilled Code', 'Warning: The provided prefilled code appears to be incorrect.');
+            console.log('test');
+        }
+    }
+    
+    function setupPrivilegesCheckbox()
+    {
+        let needsPrivilegeUpgradeCheckbox = document.getElementById('needs_privilege_upgrade');
+        if (needsPrivilegeUpgradeCheckbox != null)
+        {
+            needsPrivilegeUpgradeCheckbox.addEventListener('change', function (evnet) {
+                updatePrivilegesStatus(event.target);
+            });
+        }
+        return needsPrivilegeUpgradeCheckbox;
     }
 
     // -------------------------------------------------------------------------
@@ -168,8 +183,7 @@
     {
         // check section function must return a SectionError object
         let checkSectionFunctions = [
-            checkAccountError,
-            checkPrivilegesError
+            checkAccountError
         ];
 
         var sectionErrors = [];
@@ -197,12 +211,14 @@
         let usernameField               = document.getElementById('username');
         let passwordField               = document.getElementById('password');
         let passwordConfirmationField   = document.getElementById('password_confirmation');
+        let mailAddressField            = document.getElementById('mail_address');
 
         var accountError = new SectionError(accountSection);
 
         let username                    = usernameField.value;
         let password                    = passwordField.value;
         let passwordConfirmation        = passwordConfirmationField.value;
+        let mailAddress                 = mailAddressField.value;
 
         // username
         if (username.length == 0)
@@ -254,19 +270,79 @@
             accountError.addError(_d('sign_in', 'The password confirmation does not match the password.'), passwordConfirmationField);
         }
 
+        // mail addresss
+        if (mailAddress.length < 1)
+        {
+            accountError.addError(_d('sign_in', 'The mail address is empty.'), mailAddressField);
+        }
+
+        let mailMatch = mailAddress.match(/^([^@]+[^\\])@(.+)$/);
+        if (mailMatch == null || mailMatch.length > 3)
+        {
+            accountError.addError(_d('sign_in', 'The mail address is invalid.'), mailAddressField);
+        }
+        else
+        {
+            let mailLocale = mailMatch[1];
+            let mailDomain = mailMatch[2];
+
+            let rules = [
+                {
+                    isInvalid: string => string.startsWith('.'),
+                    message: _d('sign_in', 'The mail %1 starts with a point.')
+                },
+                {
+                    isInvalid: string => string.endsWith('.'),
+                    message: _d('sign_in', 'The mail %1 ends with a point.')
+                },
+                {
+                    isInvalid: string => string.includes('..'),
+                    message: _d('sign_in', 'The mail %1 contains two points in a row.')
+                },
+                {
+                    isInvalid: string => string.match(/^[a-zA-Z0-9-/_\-.{}|?%~#$!=&^]+$/) == null,
+                    message: _d('sign_in', 'The mail %1 contains invalid characters.')
+                }
+            ];
+
+            for (var i = 0; i < rules.length; ++i)
+            {
+                if (rules[i].isInvalid(mailLocale))
+                {
+                    let errorMessage = Main.sprintf(rules[i].message, _d('sign_in', 'locale'));
+                    accountError.addError(errorMessage, mailAddressField);
+                }
+            }
+            for (var i = 0; i < rules.length; ++i)
+            {
+                if (rules[i].isInvalid(mailDomain))
+                {
+                    let errorMessage = Main.sprintf(rules[i].message, _d('sign_in', 'domain'));
+                    accountError.addError(errorMessage, mailAddressField);
+                }
+            }
+        }
+
         return accountError;
     }
 
-    function checkPrivilegesError()
+    // -------------------------------------------------------------------------
+    // PRIVILEGES
+    // -------------------------------------------------------------------------
+    function updatePrivilegesStatus(checkbox)
     {
-        let privilegesSection = document.getElementById('privileges_section');
-        let privilegesError = new SectionError(privilegesSection);
-        if (Math.random() < 0.5)
+        if (!checkbox)
         {
-            //privilegesError.addError('An error: ' + (new Date()).getTime());
+            return;
         }
-
-        return privilegesError;
+        else if (checkbox.checked)
+        {
+            privilegesStatusLabel.innerHTML = _d('sign_in', 'You requested higher privileges.<br />You will be asked to provide additional information after the account creation.');
+        }
+        else
+        {
+            privilegesStatusLabel.innerHTML = _d('sign_in', 'Your account will be created with regular privileges.');
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -276,6 +352,13 @@
     {
         let form = document.getElementById('sign_in_form');
         let formData = new FormData(form);
+
+        let needsPrivilegeUpgrade = false;
+        if (needsPrivilegeUpgradeCheckbox != null)
+        {
+            needsPrivilegeUpgrade = needsPrivilegeUpgradeCheckbox.checked;
+        }
+        formData.append('needs_privilege_upgrade', needsPrivilegeUpgrade);
 
         return formData;
     }
@@ -342,6 +425,11 @@
     let informationOkButtonHandler = new Dialog.ButtonHandler(createHoverableButton.bind(null, undefined, _('OK'), 'var(--hover-button-default-border)', 'var(--hover-button-default-bg'));
     setupPasswordInformationButton();
     let signInButton = setupSignInButton();
-    setupChoosePrivilegesButton();
     let errorSections = setupErrorSections();
+
+    setupWrongAccountActivationCodeBanner();
+    let needsPrivilegeUpgradeCheckbox = setupPrivilegesCheckbox();
+    let privilegesStatusLabel = document.getElementById('privileges_status');
+
+    updatePrivilegesStatus(needsPrivilegeUpgradeCheckbox);
 })(window.SignIn = window.SignIn || {});

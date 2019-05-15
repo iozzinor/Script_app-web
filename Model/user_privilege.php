@@ -59,5 +59,16 @@
             }
             return self::$rank_parameters_[strtolower($this->name_)]['rank'];
         }
+
+        public function needs_associated_topics()
+        {
+            self::initialize_rank_parameters_();
+
+            if (!array_key_exists(strtolower($this->name_), self::$rank_parameters_))
+            {
+                return -1;
+            }
+            return self::$rank_parameters_[strtolower($this->name_)]['needs_associated_topics'];
+        }
     }
 ?>

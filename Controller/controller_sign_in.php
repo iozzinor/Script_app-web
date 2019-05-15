@@ -20,12 +20,12 @@
             array_push($this->additional_resources_, array('rel' => 'stylesheet', 'href' => '/Content/Styles/sign_in.css'));
 
             $this->additional_scripts_ = array();
+            array_push($this->additional_scripts_, array('src' => '/Content/Scripts/Banner/banner.js'));
             array_push($this->additional_scripts_, array('src' => '/Content/Scripts/Dialog/dialog.js'));
             array_push($this->additional_scripts_, array('src' => '/Content/Scripts/hoverable_button.js'));
             array_push($this->additional_scripts_, array('src' => '/Content/Scripts/disable_button.js'));
             array_push($this->additional_scripts_, array('src' => '/Content/Scripts/Sign_in/password_information.js'));
             array_push($this->additional_scripts_, array('src' => '/Content/Scripts/Sign_in/sign_in.js'));
-
 
             parent::__construct($request, $information);
         }
@@ -35,14 +35,28 @@
         // ---------------------------------------------------------------------
         public function default_action()
         {
-            $this->generate_view(array(
+            $view_information = array(
                 'title'                 => _d('sign_in', 'title'),
                 'navigation_menus'      => ControllerSecure::get_navigation_menus(),
                 'additional_resources'  => $this->additional_resources_,
-                'additional_scripts'    => $this->additional_scripts_,
-                'sign_in_types_script'  => $this->make_sign_in_types_script_()
-                ), 
-            Router::get_base_path() . '/View/template.php');
+                'additional_scripts'    => $this->additional_scripts_
+            );
+
+            if (!$this->request_->parameter_exists('prefilled_code'))
+            {
+                $view_information['no_prefilled_code'] = true;
+            }
+            else
+            {
+                // wrong account activation code
+                $wrong_code_script = JavascriptGenerator::generate_namespace('SignIn', 'SignIn.wrongAccountActivationCode = true;');
+                $wrong_code_script = JavascriptGenerator::enclose_in_script_tags($wrong_code_script);
+
+                $view_information['wrong_prefilled_code_script'] = $wrong_code_script;
+                $view_information['wrong_prefilled_code'] = true;
+            }
+
+            $this->generate_view($view_information, Router::get_base_path() . '/View/template.php');
         }
 
         /**
@@ -52,7 +66,7 @@
          */
         private function check_sign_in_parameters_()
         {
-            $parameters_to_retrieve = array('username', 'password', 'password_confirmation', 'privileges_count');
+            $parameters_to_retrieve = array('username', 'password', 'password_confirmation', 'mail_address');
             $parameters = array();
 
             foreach ($parameters_to_retrieve as $parameter_name)
@@ -122,10 +136,44 @@
                 }
             }
 
-            // ----------
-            // privileges
-            // ----------
+            // ------------
+            // mail address
+            // ------------
+            if (strlen($mail_address) < 1)
+            {
+                throw new SignInException('mail_address', 'The mail address is empty.');
+            }
+            // get the local and the domain parts
+            preg_match('/^([^@]+[^@\x5c])[@](.+)/', $mail_address, $mail_matches);
+            if (count($mail_matches) != 3)
+            {
+                throw new SignInException('mail_address', 'Can not extract locale and domain parts of the mail address.');
+            }
+            $locale_part = $mail_matches[1];
+            $domain_part = $mail_matches[2];
 
+            $mail_errors = array();
+            array_push($mail_errors, array('expression' => '/^[.]/', 'message' => 'The mail %s starts with a point.'));
+            array_push($mail_errors, array('expression' => '/[.]$/', 'message' => 'The mail %s ends with a point.'));
+            array_push($mail_errors, array('expression' => '/[.]{2}/', 'message' => 'The mail %s contains two points in a row.'));
+            array_push($mail_errors, array('expression' => '/[^a-zA-Z0-9\/_\x5c.{}|?%~#$!=&^\-]/', 'message' => 'The mail %s contains invalid characters.'));
+
+            // check the locale
+            foreach ($mail_errors as $mail_error)
+            {
+                if (preg_match($mail_error['expression'], $locale_part))
+                {
+                    throw new SignInException('mail_address', sprintf($mail_error['message'], 'locale'));
+                }
+            }
+            // check the domain
+            foreach ($mail_errors as $mail_error)
+            {
+                if (preg_match($mail_error['expression'], $domain_part))
+                {
+                    throw new SignInException('mail_address', sprintf($mail_error['message'], 'domain'));
+                }
+            }
         }
 
         // ---------------------------------------------------------------------
@@ -185,20 +233,61 @@
         }
 
         // ---------------------------------------------------------------------
-        // UTILS
+        // PRIVILEGES INFORMATION
         // ---------------------------------------------------------------------
-        private function make_sign_in_types_script_()
+        public function privileges_information()
         {
-            $sct = new Sct();
-            $sct_topics = $sct->get_sct_topics();
-
+            // privileges
+            $privileges = array();
             $privilege_types = $this->user_->get_all_privilege_types();
+            usort($privilege_types, function($a, $b) {
+                return $a['id'] - $b['id'];
+            });
+            // privilege type names
+            $privileges['type_names'] = array_map(function($privilege_type) {
+                return _d('privilege_types', $privilege_type['name']);
+            }, $privilege_types);
+            $privilege_types_count = count($privilege_types);
 
-            $script_content = JavascriptGenerator::create_array('SignIn', 'sctTopics', $sct_topics, ['JavascriptGenerator', 'create_sct_topic']);
-            $script_content .= JavascriptGenerator::create_array('SignIn', 'privilegeTypes', $privilege_types, ['JavascriptGenerator', 'create_privilege_type']);
-            
-            $script = JavascriptGenerator::generate_namespace('SignIn', $script_content);
-            return JavascriptGenerator::enclose_in_script_tags($script);
+            // rights
+            $privileges['rights'] = array();
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Take a test'),                 [true, true, true]);
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Consult test result'),         [true, true, true]);
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Consult progression'),         [true, true, true]);
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Personnalized suggestions'),   [true, true, true]);
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Create tests'),                [true, true]);
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Follow tests'),                [true, true]);
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Correct tests'),               [true, true]);
+            $this->add_right_($privileges['rights'], $privilege_types_count, _d('sign_in', 'Follow class results'),        [true]);
+
+            $this->generate_view(array(
+                'title'                 => _d('sign_in', 'The Privileges'),
+                'navigation_menus'      => ControllerSecure::get_navigation_menus(),
+                'additional_resources'  => $this->additional_resources_,
+                'privileges'            => $privileges
+                ), 
+            Router::get_base_path() . '/View/template.php');
+        }
+
+        private function add_right_(&$rights, $count, $name, $values)
+        {
+            $current_count = count($values);
+            if ($current_count > $count)
+            {
+                array_splice($values, $count);
+            }
+            else if ($current_count < $count)
+            {
+                for ($i = 0; $i < ($count - $current_count); ++$i)
+                {
+                    array_push($values, false);
+                }
+            }
+
+            array_push($rights, array(
+                'name'      => $name,
+                'values'    => $values
+            ));
         }
     }
 ?>
