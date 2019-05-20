@@ -43,6 +43,7 @@
                 $_SESSION['attempts'] = 0;
             }
             $attempts = $_SESSION['attempts'];
+            $_SESSION['redirection_path'] = $this->get_redirection_path_();
 
             $view_information = array(
                 'title'                 => _d('login', 'title'),
@@ -51,8 +52,7 @@
                 'password'              => '',
                 'attempts'              => $attempts,
                 'additional_resources'  => $this->additional_resources_,
-                'additional_scripts'    => $this->additional_scripts_,
-                'forward_redirection'   => $this->get_redirection_path_()
+                'additional_scripts'    => $this->additional_scripts_
             );
 
             $this->generate_view(
@@ -88,7 +88,6 @@
             if ($preferences != null)
             {
                 $_SESSION['lang'] = $preferences->get_language_short_name();
-                print($preferences->get_language_short_name());
             }
             return $preferences;
         }
@@ -129,12 +128,23 @@
                 $_SESSION['username']   = $username;
                 $_SESSION['user_id']    = $user_id;
 
-                // load preferences
-                $privileges = $this->user_->load_privileges($user_id);
-                $_SESSION['user_preferences']       = serialize($this->load_preferences_($user_id));
-                $_SESSION['user_privileges']        = serialize($privileges);
-                $_SESSION['user_privileges_mask']   = Login::get_rank_mask($privileges);
+                if (!$this->user_->is_account_activated($user_id))
+                {
+                    print(Router::get_base_url() . 'account_not_activated');
+                }
+                else
+                {
+                    // load preferences
+                    $privileges = $this->user_->load_privileges($user_id);
+                    $preferences = $this->load_preferences_($user_id);
+                    $_SESSION['user_preferences']       = serialize($preferences);
+                    $_SESSION['user_privileges']        = serialize($privileges);
+                    $_SESSION['user_privileges_mask']   = Login::get_rank_mask($privileges);
+    
+                    print(Router::get_raw_base_url() . $preferences->get_language_short_name() . '/' . $_SESSION['redirection_path']);
+                }
 
+                unset($_SESSION['redirection_path']);
                 http_response_code(200);
             }
         }

@@ -46,7 +46,6 @@
         if (SignIn.wrongAccountActivationCode)
         {
             Banner.appendTopBanner('Prefilled Code', 'Warning: The provided prefilled code appears to be incorrect.');
-            console.log('test');
         }
     }
     
@@ -353,12 +352,10 @@
         let form = document.getElementById('sign_in_form');
         let formData = new FormData(form);
 
-        let needsPrivilegeUpgrade = false;
         if (needsPrivilegeUpgradeCheckbox != null)
         {
-            needsPrivilegeUpgrade = needsPrivilegeUpgradeCheckbox.checked;
+            formData.append('needs_privilege_upgrade', needsPrivilegeUpgradeCheckbox.checked);
         }
-        formData.append('needs_privilege_upgrade', needsPrivilegeUpgrade);
 
         return formData;
     }

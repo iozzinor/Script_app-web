@@ -40,9 +40,8 @@
                     break;
                 // success
                 case 200:
-                    let newLanguage = this.responseText;
-                    let redirectionPath = document.getElementById('forward_redirection').value;
-                    window.location.replace('/' + newLanguage + '/' + redirectionPath);
+                    let redirectionPath = this.responseText;
+                    window.location.replace(redirectionPath);
                 default:
                     break;
             }

@@ -174,6 +174,8 @@
                     throw new SignInException('mail_address', sprintf($mail_error['message'], 'domain'));
                 }
             }
+
+            return $parameters;
         }
 
         // ---------------------------------------------------------------------
@@ -184,7 +186,7 @@
             // check parameters
             try
             {
-                $this->check_sign_in_parameters_();
+                $parameters = $this->check_sign_in_parameters_();
             }
             catch (SignInException $exception)
             {
@@ -196,6 +198,10 @@
             }
 
             $_SESSION['sign_in_success'] = true;
+
+            // add the user
+            $needs_privilege_upgrade = $this->request_->parameter_exists('needs_privilege_upgrade') ? $this->request_->get_parameter('needs_privilege_upgrade') : false;
+            $this->user_->add_user($parameters['username'], $parameters['password'], $parameters['mail_address'], $needs_privilege_upgrade);
         }
 
         // ---------------------------------------------------------------------
@@ -288,6 +294,30 @@
                 'name'      => $name,
                 'values'    => $values
             ));
+        }
+
+        // ---------------------------------------------------------------------
+        // ACTIVATE
+        // ---------------------------------------------------------------------
+        public function activate()
+        {
+            if (!$this->request_->parameter_exists('activation_code'))
+            {
+                header('Location: ' . Router::get_base_url() . 'home');
+                exit;
+            }
+
+            $activation_code = $this->request_->get_parameter('activation_code');
+
+            $this->generate_view(
+                array(
+                    'title'                     => _d('sign_in', 'Account Activation'),
+                    'navigation_menus'          => ControllerSecure::get_navigation_menus(),
+                    'additional_resources'      => $this->additional_resources_,
+                    'invalid_activation_code'   => !$this->user_->activate_account($activation_code)
+                ),
+                Router::get_base_path() . '/View/template.php'
+            );
         }
     }
 ?>

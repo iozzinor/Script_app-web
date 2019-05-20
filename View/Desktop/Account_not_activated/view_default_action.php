@@ -1,0 +1,1 @@
+<p><?= _d('account_not_activated', 'Your account is not activated.') ?></p>

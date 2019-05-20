@@ -124,7 +124,8 @@
 				'new_sct_subject',
 				'sct_types',
 				'sct_topics',
-				'privilege_types'
+				'privilege_types',
+				'account_not_activated'
 				)
 			);
 			$actual_lang = WebLanguage::set_language($lang);
