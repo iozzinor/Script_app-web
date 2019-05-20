@@ -40,7 +40,7 @@
             {
                 return false;
             }
-            return $result['activated'] == 1;
+            return $result['activated'] == 1 || $result['activated'] == 3;
         }
 
         // ---------------------------------------------------------------------
@@ -260,23 +260,88 @@
         // ---------------------------------------------------------------------
         // ACTIVATE
         // ---------------------------------------------------------------------
+        /**
+         * @return Array The activated account, on success.
+         */
         public function activate_account($activation_code)
         {
-            $account_id = $this->retrieve_account_id_($activation_code);
+            $account_information = $this->retrieve_account_information_($activation_code);
+            if ($account_information == null)
+            {
+                return null;
+            }
 
-            return $account_id > -1;
+            $activated = $account_information['activated'];
+            if (!$this->change_activated_($account_information['account_id'], $account_information['activated']))
+            {
+                return null;
+            }
+
+            return $account_information;
         }
 
-        private function retrieve_account_id_($activation_code)
+        /**
+         * @return array The account information: id, activation_code.
+         */
+        private function retrieve_account_information_($activation_code)
         {
-            $statement = DatabaseHandler::database()->prepare('SELECT id from account WHERE activation_code LIKE :activation_code;');
+            $statement = DatabaseHandler::database()->prepare('SELECT account.id AS account_id, account.activated AS activated, account.activation_code AS activation_code, user.username AS username FROM account INNER JOIN user ON user.account_id = account.id WHERE account.activation_code LIKE :activation_code;');
             $statement->execute(array(':activation_code' => $activation_code));
 
             if (!($result = $statement->fetch(PDO::FETCH_ASSOC)))
             {
-                return -1;
+                return null;
             }
-            return $result['id'];
+            return $result;
+        }
+
+        /**
+         * @return bool Whether the account activated status has been changed.
+         */
+        private function change_activated_($account_id, $activated)
+        {
+            $new_activated = 1;
+            if ($activated == 2)
+            {
+                $new_activated = 3;
+            }
+            else if ($activated != 0)
+            {
+                return false;
+            }
+
+            $statement = DatabaseHandler::database()->prepare('UPDATE account set activated=:activated WHERE id=:account_id;');
+            $statement->execute(array(
+                'activated'     => $new_activated,
+                'account_id'    => $account_id
+            ));
+
+            return true;
+        }
+
+        /**
+         * Update the account activated flag and set it to activated.
+         * 
+         * @return bool Whether the user should be redirected to the privilege upgrade page.
+         */
+        public function should_display_privilege_upgrade($user_id)
+        {
+            $database = DatabaseHandler::database();
+
+            // get the account id and activation code
+            $statement = $database->prepare('SELECT account.id AS account_id, account.activated AS activated FROM account INNER JOIN user ON account.id = user.account_id WHERE user.id = :user_id;');
+            $statement->execute(array(':user_id' => $user_id));
+
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$result || $result['activated'] != 3)
+            {
+                return false;
+            }
+
+            $statement = $database->prepare('UPDATE account SET activated=1 WHERE id=:account_id;');
+            $statement->execute(array('account_id' => $result['account_id']));
+            return true;
         }
 
         // ---------------------------------------------------------------------

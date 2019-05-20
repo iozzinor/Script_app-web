@@ -141,7 +141,14 @@
                     $_SESSION['user_privileges']        = serialize($privileges);
                     $_SESSION['user_privileges_mask']   = Login::get_rank_mask($privileges);
     
-                    print(Router::get_raw_base_url() . $preferences->get_language_short_name() . '/' . $_SESSION['redirection_path']);
+                    if ($this->user_->should_display_privilege_upgrade($user_id))
+                    {
+                        print(Router::get_raw_base_url() . $preferences->get_language_short_name() . '/privileges/upgrade');
+                    }
+                    else
+                    {
+                        print(Router::get_raw_base_url() . $preferences->get_language_short_name() . '/' . $_SESSION['redirection_path']);
+                    }
                 }
 
                 unset($_SESSION['redirection_path']);

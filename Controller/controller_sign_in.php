@@ -307,15 +307,24 @@
                 exit;
             }
 
+            $view_information =  array(
+                'title'                     => _d('sign_in', 'Account Activation'),
+                'navigation_menus'          => ControllerSecure::get_navigation_menus(),
+                'additional_resources'      => $this->additional_resources_);
+
             $activation_code = $this->request_->get_parameter('activation_code');
+            $activation_information = $this->user_->activate_account($activation_code);
+            if ($activation_information == null)
+            {
+                $view_information['invalid_activation_code'] = true;
+            }
+            else
+            {
+                $view_information['username'] = $activation_information['username'];
+            }
 
             $this->generate_view(
-                array(
-                    'title'                     => _d('sign_in', 'Account Activation'),
-                    'navigation_menus'          => ControllerSecure::get_navigation_menus(),
-                    'additional_resources'      => $this->additional_resources_,
-                    'invalid_activation_code'   => !$this->user_->activate_account($activation_code)
-                ),
+                    $view_information,
                 Router::get_base_path() . '/View/template.php'
             );
         }
