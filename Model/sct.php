@@ -158,28 +158,5 @@
         {
             return $items_count * 30.0;
         }
-
-        private function get_sct_information_request_()
-        {
-            return 'SELECT sct_type.name AS current_sct_type,'
-            . 'user.username AS author_last_name,'
-            . 'sct.release_date AS release_date,'
-            . 'sct.questions_count AS questions_count,'
-            . 'sct.items_count AS items_count,'
-            // statistics
-            . 'sct_statistic.mean_duration AS mean_duration,'
-            . 'sct_statistic.mean_score AS mean_score,'
-            . 'sct_statistic.mean_vote AS mean_vote,'
-            . 'sct_statistic.completion_percent AS mean_completion_percent,'
-            . 'sct_statistic.launches_count AS launches_count'
-            // FROM tables
-            . ' FROM user, sct, sct_type, sct_statistic'
-            // CONDITIONS
-            . ' WHERE'
-            .   ' sct_type.id=sct.sct_type_id'
-            .   ' AND sct.state_id=:published_state_id'
-            .   ' AND sct.author_id=user.id'
-            .   ' AND sct.sct_statistic_id=sct_statistic.id';
-        }
     }
 ?>
