@@ -23,7 +23,8 @@
 			require($not_found_controller_information->get_controller_file_path());
             $not_found_controller_class_name = $not_found_controller_information->get_controller_class_name();
             $not_found_controller = new $not_found_controller_class_name($this->request_, $not_found_controller_information, $query);
-			$not_found_controller->execute_action($not_found_controller_information->get_action());
+            $not_found_controller->set_domain_route($this);
+            $not_found_controller->execute_action($not_found_controller_information->get_action());
         }
     }
 ?>

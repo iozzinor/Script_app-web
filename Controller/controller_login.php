@@ -55,10 +55,7 @@
                 'additional_scripts'    => $this->additional_scripts_
             );
 
-            $this->generate_view(
-                $view_information,
-                Router::get_base_path() . '/View/template.php'
-            );
+            $this->generate_view($view_information, 'template.php');
         }
 
         /**

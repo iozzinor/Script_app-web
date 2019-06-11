@@ -28,7 +28,7 @@
                     'settings_script'       => $this->generate_settings_script_(),
                     'additional_scripts'    => $this->additional_scripts_
                 ),
-                Router::get_base_path() . '/View/template.php'
+                'template.php'
             );
         }
 

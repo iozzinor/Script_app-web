@@ -5,11 +5,17 @@
     {
         protected $request_;
         protected $information_;
+        protected $domain_route_;
         
         public function __construct(Request $request, ControllerInformation $controller_information)
         {
             $this->request_     = $request;
             $this->information_ = $controller_information;
+        }
+
+        public function set_domain_route($domain_route)
+        {
+            $this->domain_route_ = $domain_route;
         }
 
         /**
@@ -26,7 +32,10 @@
             {
                 $result .= '/Mobile';
             }
-            $result .= '/Desktop';
+            else
+            {
+                $result .= '/Desktop';
+            }
 
             $result .= '/' . $this->get_view_folder_name_() . '/view_' . $this->information_->get_action() . '.php';
 
@@ -73,6 +82,16 @@
          */
         public function generate_view($view_data = array(), $template = null)
         {
+            // update the template
+            if ($template != null && $this->domain_route_ != null && !file_exists($template))
+            {
+                $template_path = Router::get_base_path() . '/View/' . $this->domain_route_->get_domain_name() . '/' . $template;
+                if (file_exists($template_path))
+                {
+                    $template = $template_path;
+                }
+            }
+
             $file_path = $this->get_view_file_path_();
             $view = new View($file_path);
             $view->generate($view_data, $template);

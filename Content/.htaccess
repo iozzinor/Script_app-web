@@ -1,0 +1,8 @@
+RewriteEngine on
+
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+RewriteCond %{REQUEST_URI} !Mobile
+RewriteCond %{REQUEST_URI} !Desktop
+RewriteCond %{REQUEST_URI} !^/index\.php.*
+RewriteRule ([^/].*) index.php?q=$1 [L,QSA]

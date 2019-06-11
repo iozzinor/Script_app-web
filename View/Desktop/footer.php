@@ -1,0 +1,1 @@
+<?php require(Router::get_base_path() . '/View/footer.php'); ?>

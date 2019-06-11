@@ -24,7 +24,7 @@
                     'navigation_menus'  => ControllerSecure::get_navigation_menus(),
                     'error_message'     => $error_message
                 ),
-                Router::get_base_path() . '/View/template.php'
+                'template.php'
             );
         }
     }

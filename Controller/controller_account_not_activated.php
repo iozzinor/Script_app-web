@@ -28,7 +28,7 @@
 
             $this->generate_view(
                 $view_information,
-                Router::get_base_path() . '/View/template.php'
+                'template.php'
             );
         }
     }

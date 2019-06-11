@@ -56,7 +56,7 @@
                 $view_information['wrong_prefilled_code'] = true;
             }
 
-            $this->generate_view($view_information, Router::get_base_path() . '/View/template.php');
+            $this->generate_view($view_information, 'template.php');
         }
 
         /**
@@ -222,7 +222,7 @@
                 'navigation_menus'      => ControllerSecure::get_navigation_menus(),
                 'additional_resources'  => $this->additional_resources_
             ),
-            Router::get_base_path() . '/View/template.php');
+            'template.php');
         }
 
         // ---------------------------------------------------------------------
@@ -235,7 +235,7 @@
                 'navigation_menus'      => ControllerSecure::get_navigation_menus(),
                 'additional_resources'  => $this->additional_resources_
                 ), 
-            Router::get_base_path() . '/View/template.php');
+            'template.php');
         }
 
         // ---------------------------------------------------------------------
@@ -272,7 +272,7 @@
                 'additional_resources'  => $this->additional_resources_,
                 'privileges'            => $privileges
                 ), 
-            Router::get_base_path() . '/View/template.php');
+            'template.php');
         }
 
         private function add_right_(&$rights, $count, $name, $values)
@@ -323,10 +323,7 @@
                 $view_information['username'] = $activation_information['username'];
             }
 
-            $this->generate_view(
-                    $view_information,
-                Router::get_base_path() . '/View/template.php'
-            );
+            $this->generate_view($view_information, 'template.php');
         }
     }
 ?>

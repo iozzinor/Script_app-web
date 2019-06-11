@@ -79,6 +79,12 @@
 		 */
 		public function route_request()
 		{
+			// guess the device if needed
+			if (!isset($_SESSION['device']))
+			{
+				$_SESSION['device'] = $this->is_mobile() ? 'mobile' : 'desktop';
+			}
+
 			try 
 			{
 				// create the request
@@ -88,6 +94,9 @@
 
 				// update the language
 				$this->find_language($lang);
+
+				// update the device
+				$_SESSION['device'] = $request->get_parameter('device');
 
 				// get the route domain
 				$this->domain_route_ = $this->find_domain_route_($request);
@@ -155,6 +164,40 @@
 
 			return new DomainRouteWeb(DomainRoute::DESKTOP, $request);
 		}
+
+		/**
+		 * @return bool Whether the user uses a mobile.
+		 */
+		protected function is_mobile()
+		{
+			// declare mobile names
+			$mobile_names = [
+				'mobile',
+				'iphone',
+				'ipad',
+				'ios',
+				'android',
+				'blackberry'
+			];
+
+			// convert names to lowercase
+			foreach ($mobile_names as &$mobile_name)
+			{
+				$mobile_name = strtolower($mobile_name);
+			}
+
+			$user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+			foreach ($mobile_names as $mobile_name)
+			{
+				if (!strstr($user_agent, $mobile_name))
+				{
+					continue;
+				}
+				return true;
+			}
+			
+			return false;
+		}
 	
 		/**
 		 * @param query The query.
@@ -221,7 +264,10 @@
 		{
 			require($controller_information->get_controller_file_path());
 			$controller_class_name = $controller_information->get_controller_class_name();
-			return new $controller_class_name($request, $controller_information);
+
+			$result = new $controller_class_name($request, $controller_information);
+			$result->set_domain_route($this->domain_route_);
+			return $result;
 		}
 
 		protected function execute_controller_action(string $query, Request $request, ControllerInformation $controller_information)

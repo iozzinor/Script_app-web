@@ -60,7 +60,7 @@
                     'sct_information_script'    => $this->sct_information_script_,
                     'additional_scripts'        => $this->additional_scripts_
                 ),
-                Router::get_base_path() . '/View/template.php'
+                'template.php'
             );
         }
 

@@ -17,6 +17,25 @@
             return $this->domain_;
         }
 
+        /**
+         * @return string The domain name
+         */
+        public function get_domain_name()
+        {
+            switch ($this->domain_)
+            {
+                case DomainRoute::API:
+                    return 'Api';
+                case DomainRoute::MOBILE:
+                    return 'Mobile';
+                case DomainRoute::DESKTOP:
+                    return 'Desktop';
+                default:
+                    break;
+            }
+            return '';
+        }
+
         abstract public function manage_exception($exception);
 
         abstract public function resource_not_found($query);

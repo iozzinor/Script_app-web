@@ -12,7 +12,7 @@
                 'display_new_sct_subject_link'  => Login::is_logged_in()
             );
         
-            $this->generate_view($view_information, Router::get_base_path() . '/View/template.php');
+            $this->generate_view($view_information, 'template.php');
         }
     }
 ?>
